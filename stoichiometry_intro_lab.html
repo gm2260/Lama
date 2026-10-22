@@ -1,0 +1,2663 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المختبر الافتراضي: مؤشرات حدوث تفاعل كيميائي | كيمياء الحسابات الكيميائية</title>
+  
+  <!-- خطوط عربية حديثة -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+
+  <style>
+    :root {
+      --primary-color: #7c3aed;
+      --secondary-color: #06b6d4;
+      --accent-purple: #9333ea;
+      --kmno4-purple: #701a75;
+      --bg-gradient: radial-gradient(circle at 50% 10%, #1e1b4b 0%, #0f172a 60%, #090d16 100%);
+    }
+
+    * {
+      font-family: 'Tajawal', 'Cairo', system-ui, -apple-system, sans-serif;
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(147, 51, 234, 0.5);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(147, 51, 234, 0.8);
+    }
+
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-card-bright {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    /* أنيميشن الفقاعات والتحريك */
+    @keyframes liquidSwirl {
+      0% { transform: scaleX(1) scaleY(1); }
+      50% { transform: scaleX(0.97) scaleY(1.02); }
+      100% { transform: scaleX(1) scaleY(1); }
+    }
+
+    @keyframes dropFall {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      85% { transform: translateY(140px) scale(0.9); opacity: 1; }
+      100% { transform: translateY(155px) scale(1.4); opacity: 0; }
+    }
+
+    @keyframes rippleEffect {
+      0% { transform: scale(0.3); opacity: 0.9; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.04); opacity: 1; }
+    }
+
+    .liquid-anim {
+      animation: liquidSwirl 2.5s ease-in-out infinite;
+    }
+
+    .animate-gentle-pulse {
+      animation: gentlePulse 2s infinite ease-in-out;
+    }
+
+    /* Glow Effects */
+    .glow-purple {
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.45);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.45);
+    }
+    .glow-gold {
+      box-shadow: 0 0 25px rgba(251, 191, 36, 0.45);
+    }
+
+    /* أدوات المختبر التفاعلية */
+    .lab-bench {
+      background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 70%, #020617 100%);
+      box-shadow: inset 0 2px 20px rgba(0,0,0,0.8);
+    }
+
+    .bench-tabletop {
+      background: linear-gradient(180deg, #334155 0%, #1e293b 35%, #0f172a 100%);
+      border-top: 3px solid #64748b;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.5);
+    }
+
+    /* مظهر الزجاج الواقعي */
+    .glassware {
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-purple-600 selection:text-white">
+
+  <!-- ==================== HEADER (الشريط العلوي التفاعلي) ==================== -->
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-purple-500/20 px-4 py-3 sticky top-0 z-50 shadow-xl">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+      
+      <!-- شعار وعنوان التجربة -->
+      <div class="flex items-center gap-3.5 text-right w-full md:w-auto">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-700 via-fuchsia-600 to-indigo-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-purple-900/50 flex-shrink-0 animate-gentle-pulse">
+          ⚗️
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 bg-purple-500/20 border border-purple-500/40 text-purple-300 text-xs font-bold rounded-full">
+              كيمياء 2-2 • الفصل 5 (الحسابات الكيميائية)
+            </span>
+            <span class="hidden sm:inline-block px-2.5 py-0.5 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold rounded-full">
+              التجربة الاستهلالية
+            </span>
+          </div>
+          <h1 class="text-xl md:text-2xl font-black bg-gradient-to-r from-white via-slate-100 to-purple-200 bg-clip-text text-transparent mt-0.5">
+            ما المؤشرات التي تدل على حدوث تفاعل كيميائي؟
+          </h1>
+          <p class="text-xs text-slate-400">
+            تفاعل برمنجنات البوتاسيوم <span class="text-fuchsia-400 font-bold">KMnO₄</span> مع كبريتيت الصوديوم الهيدروجيني <span class="text-cyan-300 font-bold">NaHSO₃</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- أزرار التبديل وأدوات التحكم -->
+      <div class="flex flex-wrap items-center justify-end gap-2 w-full md:w-auto">
+        <!-- أزرار التنقل بين الأقسام -->
+        <div class="bg-slate-800/80 p-1 rounded-xl border border-slate-700/80 flex items-center text-xs font-bold">
+          <button id="navLabBtn" onclick="switchTab('lab')" class="px-3 py-1.5 rounded-lg transition-all bg-purple-600 text-white shadow-md flex items-center gap-1.5">
+            <span>🧪</span>
+            <span>المختبر التفاعلي</span>
+          </button>
+          <button id="navMoleculeBtn" onclick="switchTab('molecules')" class="px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-slate-100 flex items-center gap-1.5">
+            <span>⚛️</span>
+            <span>المستوى الجزيئي</span>
+          </button>
+          <button id="navCompareBtn" onclick="switchTab('compare')" class="px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-slate-100 flex items-center gap-1.5">
+            <span>⚖️</span>
+            <span>مقارنة أسلوب الإضافة</span>
+          </button>
+          <button id="navReportBtn" onclick="switchTab('report')" class="px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-slate-100 flex items-center gap-1.5">
+            <span>📝</span>
+            <span>دفتر النتائج والتقييم</span>
+          </button>
+        </div>
+
+        <!-- أدوات المساعدة، الصوت، وملء الشاشة -->
+        <div class="flex items-center gap-1.5">
+          <!-- زر ملء الشاشة -->
+          <button id="fullscreenToggleBtn" onclick="toggleAppFullscreen()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-bold" title="تبديل وضع ملء الشاشة">
+            <span id="fullscreenIcon">⛶</span>
+            <span id="fullscreenText" class="hidden sm:inline">ملء الشاشة</span>
+          </button>
+          <button id="audioToggleBtn" onclick="toggleAudio()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white transition" title="تشغيل / كتم الصوت">
+            <span id="audioIcon">🔊</span>
+          </button>
+          <button onclick="openSafetyModal()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold transition flex items-center gap-1">
+            <span>⚠️</span>
+            <span>إرشادات السلامة</span>
+          </button>
+          <button onclick="resetLab()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 text-xs font-bold transition flex items-center gap-1">
+            <span>🔄</span>
+            <span>إعادة التجربة</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== BODY CONTENT ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 md:p-5 flex flex-col gap-4">
+
+    <!-- TAB 1: المختبر التفاعلي الرئيسي (LAB BENCH) -->
+    <section id="tab-lab" class="flex flex-col gap-4">
+      
+      <!-- شريط الخطوات الاسترشادية (وفق خطوات الكتاب) -->
+      <div class="glass-card rounded-2xl p-4 border border-purple-500/30 flex flex-col gap-3 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/60 pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-400">الدليل الإرشادي التفاعلي</span>
+            <span class="text-sm font-black text-slate-200" id="stepTitleDisplay">الخطوة 1: تعليمات السلامة في المختبر</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400 font-medium">التقدم:</span>
+            <div class="w-32 h-2.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+              <div id="stepProgressBar" class="h-full bg-gradient-to-r from-purple-500 to-emerald-400 w-1/6 transition-all duration-500"></div>
+            </div>
+            <span id="stepProgressText" class="text-xs font-bold text-emerald-400">1 / 6</span>
+          </div>
+        </div>
+
+        <!-- نص التوجيه الذكي -->
+        <div class="flex items-start justify-between gap-3 bg-purple-950/40 p-3 rounded-xl border border-purple-500/20">
+          <div class="flex items-start gap-2.5 text-right">
+            <span class="text-2xl">💡</span>
+            <div>
+              <p id="stepInstructionText" class="text-sm font-semibold text-slate-200">
+                اقرأ تعليمات السلامة أولاً، وتأكد من ارتداء نظارات الوقاية والقفازات للتعامل مع برمنجنات البوتاسيوم.
+              </p>
+              <p id="stepHintText" class="text-xs text-purple-300 mt-1">
+                تلميح: انقر على زر "تأكيد إجراءات السلامة" للانتقال للخطوة التالية.
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <button id="stepActionBtn" onclick="handleStepAction()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-black shadow-lg shadow-purple-900/40 transition flex items-center gap-1.5">
+              <span>تأكيد السلامة والبدء</span>
+              <span>⬅️</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- مساحة العمل: طاولة المختبر التفاعلية + لوحة البيانات والتحكم -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        
+        <!-- العمود الأيمن: طاولة المختبر الكيميائي (Canvas & Interactive Glassware) (8 أعمدة) -->
+        <div class="lg:col-span-8 flex flex-col gap-3">
+          
+          <div class="lab-bench rounded-3xl border border-slate-700/80 overflow-hidden relative shadow-2xl flex flex-col min-h-[500px]">
+            
+            <!-- خلفية المختبر والإضاءة العلوية -->
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/40 to-slate-950 pointer-events-none"></div>
+            
+            <!-- شريط علوي صغير لحالة التفاعل -->
+            <div class="relative z-10 px-4 py-2.5 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/60 flex flex-wrap items-center justify-between text-xs gap-2">
+              <div class="flex items-center gap-3">
+                <span class="inline-flex items-center gap-1 text-slate-300">
+                  <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                  <span>حجم المحلول في الكأس:</span>
+                  <b id="beakerTotalVolume" class="text-white font-mono">0.0 mL</b>
+                </span>
+                <span class="inline-flex items-center gap-1 text-slate-300">
+                  <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                  <span>حجم NaHSO₃ المضاف:</span>
+                  <b id="totalAddedNaHSO3" class="text-cyan-300 font-mono">0.0 mL</b>
+                </span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400">حالة اللون:</span>
+                <span id="colorStatusBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-slate-800 text-slate-400 border border-slate-700">
+                  فارغ
+                </span>
+                <button onclick="toggleAppFullscreen()" class="p-1 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1 text-[11px] font-bold" title="ملء الشاشة">
+                  <span id="benchFsBtnIcon">⛶</span>
+                  <span class="hidden sm:inline">تكبير الشاشة</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- بطاقة مراحل تكرار الإضافة الثلاث حتى يختفي اللون -->
+            <div class="relative z-10 px-4 py-2.5 bg-gradient-to-r from-purple-950/60 via-slate-900/80 to-cyan-950/60 border-b border-purple-500/30 flex flex-col md:flex-row items-center justify-between gap-2.5 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="text-amber-400 font-black text-sm animate-spin" style="animation-duration: 4s;">🔄</span>
+                <div>
+                  <span class="font-bold text-slate-100 block">تكرار خطوات الإضافة (3 مرات حتى يختفي اللون):</span>
+                  <span class="text-[10px] text-purple-300">إضافة 5 mL من NaHSO₃ في كل دفعة مع التحريك المستمر</span>
+                </div>
+              </div>
+
+              <!-- بطاقات الدفعات الثلاث -->
+              <div class="grid grid-cols-3 gap-2 w-full md:w-auto flex-1 max-w-xl">
+                <!-- الدفعة 1 -->
+                <div id="batchCard1" onclick="addBatch(1)" class="cursor-pointer p-2 rounded-xl border border-slate-700 bg-slate-900/90 hover:border-purple-400 transition text-center flex flex-col items-center gap-1 shadow-sm">
+                  <div class="flex items-center gap-1">
+                    <span id="batchDot1" class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
+                    <span class="font-bold text-[11px] text-slate-200">الدفعة 1 (5 mL)</span>
+                  </div>
+                  <span id="batchColor1" class="text-[10px] text-fuchsia-400">بهتان بنفسجي</span>
+                </div>
+
+                <!-- الدفعة 2 (تكرار 1) -->
+                <div id="batchCard2" onclick="addBatch(2)" class="cursor-pointer p-2 rounded-xl border border-slate-700 bg-slate-900/90 hover:border-fuchsia-400 transition text-center flex flex-col items-center gap-1 shadow-sm">
+                  <div class="flex items-center gap-1">
+                    <span id="batchDot2" class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
+                    <span class="font-bold text-[11px] text-slate-200">الدفعة 2 (10 mL)</span>
+                  </div>
+                  <span id="batchColor2" class="text-[10px] text-pink-300">وردي شاحب</span>
+                </div>
+
+                <!-- الدفعة 3 (تكرار 2 - زوال اللون) -->
+                <div id="batchCard3" onclick="addBatch(3)" class="cursor-pointer p-2 rounded-xl border border-slate-700 bg-slate-900/90 hover:border-emerald-400 transition text-center flex flex-col items-center gap-1 shadow-sm">
+                  <div class="flex items-center gap-1">
+                    <span id="batchDot3" class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
+                    <span class="font-bold text-[11px] text-slate-200">الدفعة 3 (15 mL)</span>
+                  </div>
+                  <span id="batchColor3" class="text-[10px] text-emerald-400 font-bold">زوال اللون تماماً ✨</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- رف المواد الكيميائية (Reagent Shelf) في أعلى الطاولة -->
+            <div class="relative z-10 px-6 pt-4 pb-2 flex items-center justify-around border-b border-slate-800/80 bg-slate-900/30">
+              
+              <!-- زجاجة برمنجنات البوتاسيوم -->
+              <div class="flex flex-col items-center gap-1 group cursor-pointer" onclick="clickReagentBottle('KMnO4')">
+                <div class="relative transition transform group-hover:-translate-y-1">
+                  <!-- Bottle SVG -->
+                  <svg width="68" height="96" viewBox="0 0 68 96" fill="none" class="filter drop-shadow-md">
+                    <!-- سدادة الزجاجة -->
+                    <rect x="24" y="2" width="20" height="12" rx="3" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+                    <rect x="22" y="14" width="24" height="6" fill="#334155"/>
+                    <!-- عنق الزجاجة -->
+                    <rect x="25" y="20" width="18" height="10" fill="#0f172a" stroke="#475569"/>
+                    <!-- جسم الزجاجة البني الداكن (Amber Reagent Bottle) -->
+                    <path d="M12 30 C12 24, 25 24, 25 24 L43 24 C43 24, 56 24, 56 30 L58 86 C58 91, 54 94, 48 94 L20 94 C14 94, 10 91, 10 86 Z" fill="#2d1305" stroke="#78350f" stroke-width="2"/>
+                    <!-- السائل البنفسجي الغامق في القاع -->
+                    <path d="M12 50 L56 50 L56 86 C56 90, 52 92, 48 92 L20 92 C16 92, 12 90, 12 86 Z" fill="#4a044e" opacity="0.9"/>
+                    <!-- ملصق الزجاجة -->
+                    <rect x="16" y="44" width="36" height="34" rx="2" fill="#f8fafc" stroke="#cbd5e1"/>
+                    <text x="34" y="55" font-size="7" font-weight="bold" fill="#701a75" text-anchor="middle">KMnO₄</text>
+                    <text x="34" y="64" font-size="6" font-weight="bold" fill="#0f172a" text-anchor="middle">0.01 M</text>
+                    <text x="34" y="73" font-size="5" fill="#b91c1c" text-anchor="middle">⚠️ مؤكسد قوي</text>
+                  </svg>
+                  <span class="absolute -top-1 -right-1 px-1.5 py-0.2 bg-purple-600 text-white text-[9px] font-bold rounded-full border border-purple-300">
+                    5 mL
+                  </span>
+                </div>
+                <span class="text-xs font-bold text-purple-300 group-hover:text-purple-200">برمنجنات البوتاسيوم</span>
+                <button onclick="event.stopPropagation(); clickReagentBottle('KMnO4')" class="text-[10px] px-2 py-0.5 bg-purple-600/30 hover:bg-purple-600 text-purple-200 rounded border border-purple-500/40 transition">
+                  اسحب 5 mL للمخبار
+                </button>
+              </div>
+
+              <!-- محطة التنظيف والتجفيف (Wash & Dry Station) -->
+              <div class="flex flex-col items-center gap-1 group cursor-pointer" onclick="cleanCylinder()">
+                <div class="relative transition transform group-hover:-translate-y-1">
+                  <!-- Wash Bottle SVG -->
+                  <svg width="60" height="96" viewBox="0 0 60 96" fill="none">
+                    <path d="M30 6 Q20 2, 14 16 L26 22" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    <rect x="22" y="20" width="16" height="8" rx="2" fill="#0284c7"/>
+                    <path d="M14 28 C14 28, 20 28, 24 28 L36 28 C40 28, 46 28, 46 34 L48 86 C48 91, 44 94, 40 94 L20 94 C16 94, 12 91, 12 86 Z" fill="#0369a1" opacity="0.35" stroke="#38bdf8" stroke-width="1.8"/>
+                    <path d="M13 54 L47 54 L47 86 C47 90, 44 92, 40 92 L20 92 C16 92, 13 90, 13 86 Z" fill="#38bdf8" opacity="0.6"/>
+                    <rect x="16" y="58" width="28" height="20" rx="2" fill="#ffffff" opacity="0.9"/>
+                    <text x="30" y="68" font-size="6" font-weight="bold" fill="#0369a1" text-anchor="middle">ماء مقطر</text>
+                    <text x="30" y="74" font-size="5" fill="#64748b" text-anchor="middle">H₂O</text>
+                  </svg>
+                  <span id="cylinderCleanBadge" class="absolute -top-1 -right-1 px-1.5 py-0.2 bg-emerald-600 text-white text-[9px] font-bold rounded-full border border-emerald-300">
+                    نظيف ✓
+                  </span>
+                </div>
+                <span class="text-xs font-bold text-sky-300 group-hover:text-sky-200">غسيل وتجفيف المخبار</span>
+                <button onclick="event.stopPropagation(); cleanCylinder()" class="text-[10px] px-2 py-0.5 bg-sky-600/30 hover:bg-sky-600 text-sky-200 rounded border border-sky-500/40 transition">
+                  تنظيف وتجفيف
+                </button>
+              </div>
+
+              <!-- زجاجة كبريتيت الصوديوم الهيدروجيني NaHSO3 -->
+              <div class="flex flex-col items-center gap-1 group cursor-pointer" onclick="clickReagentBottle('NaHSO3')">
+                <div class="relative transition transform group-hover:-translate-y-1">
+                  <!-- Bottle SVG -->
+                  <svg width="68" height="96" viewBox="0 0 68 96" fill="none" class="filter drop-shadow-md">
+                    <rect x="24" y="2" width="20" height="12" rx="3" fill="#1e293b" stroke="#0ea5e9" stroke-width="1.5"/>
+                    <rect x="22" y="14" width="24" height="6" fill="#334155"/>
+                    <rect x="25" y="20" width="18" height="10" fill="#0f172a" stroke="#0ea5e9"/>
+                    <path d="M12 30 C12 24, 25 24, 25 24 L43 24 C43 24, 56 24, 56 30 L58 86 C58 91, 54 94, 48 94 L20 94 C14 94, 10 91, 10 86 Z" fill="#0f172a" opacity="0.6" stroke="#38bdf8" stroke-width="2"/>
+                    <!-- سائل شفاف مائل للزرقة الخفيفة جدا -->
+                    <path d="M12 46 L56 46 L56 86 C56 90, 52 92, 48 92 L20 92 C16 92, 12 90, 12 86 Z" fill="#e0f2fe" opacity="0.35"/>
+                    <rect x="16" y="44" width="36" height="34" rx="2" fill="#f8fafc" stroke="#cbd5e1"/>
+                    <text x="34" y="55" font-size="7" font-weight="bold" fill="#0284c7" text-anchor="middle">NaHSO₃</text>
+                    <text x="34" y="64" font-size="6" font-weight="bold" fill="#0f172a" text-anchor="middle">0.01 M</text>
+                    <text x="34" y="73" font-size="5" fill="#0284c7" text-anchor="middle">عامل مختزل</text>
+                  </svg>
+                  <span class="absolute -top-1 -right-1 px-1.5 py-0.2 bg-cyan-600 text-white text-[9px] font-bold rounded-full border border-cyan-300">
+                    جاهز
+                  </span>
+                </div>
+                <span class="text-xs font-bold text-cyan-300 group-hover:text-cyan-200">كبريتيت الصوديوم الهيدروجيني</span>
+                <button onclick="event.stopPropagation(); clickReagentBottle('NaHSO3')" class="text-[10px] px-2 py-0.5 bg-cyan-600/30 hover:bg-cyan-600 text-cyan-200 rounded border border-cyan-500/40 transition">
+                  اسحب 5 mL للمخبار
+                </button>
+              </div>
+
+            </div>
+
+            <!-- ساحة التفاعل الرئيسية (المخبار المدرج + الكأس 100 مل + ساق التحريك) -->
+            <div class="relative flex-1 flex items-end justify-center px-6 py-6 min-h-[340px]">
+              
+              <!-- ساق التحريك الزجاجية (Glass Stirring Rod) المتحركة -->
+              <div id="stirringRodWrapper" class="absolute z-30 transition-all duration-300 pointer-events-auto cursor-pointer" style="left: 54%; bottom: 85px;" onclick="toggleStirring()" title="انقر للتحريك بالساق الزجاجية">
+                <svg width="24" height="210" viewBox="0 0 24 210" fill="none" id="stirringRodSvg" class="transform -rotate-12 transition-transform duration-200">
+                  <defs>
+                    <linearGradient id="glassRodGrad" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stop-color="rgba(255,255,255,0.7)"/>
+                      <stop offset="35%" stop-color="rgba(203,213,225,0.3)"/>
+                      <stop offset="70%" stop-color="rgba(255,255,255,0.8)"/>
+                      <stop offset="100%" stop-color="rgba(148,163,184,0.4)"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- جسم الساق الزجاجية -->
+                  <rect x="8" y="5" width="8" height="195" rx="4" fill="url(#glassRodGrad)" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+                  <!-- لمعة طرف الساق -->
+                  <circle cx="12" cy="198" r="3.5" fill="#ffffff" opacity="0.8"/>
+                </svg>
+                <div id="stirLabel" class="absolute -top-7 -right-6 bg-slate-900/90 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap shadow">
+                  ساق زجاجية (اضغط للتحريك)
+                </div>
+              </div>
+
+              <!-- المخبار المدرج 10 مل (10 mL Graduated Cylinder) -->
+              <div id="cylinderContainer" class="flex flex-col items-center glassware z-20 transition-all duration-700 mx-4" style="transform-origin: top right;">
+                <div class="relative">
+                  <!-- Cylinder SVG -->
+                  <svg width="90" height="260" viewBox="0 0 90 260" fill="none" id="cylinderSvg">
+                    <defs>
+                      <linearGradient id="glassCylGrad" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
+                        <stop offset="25%" stop-color="rgba(255,255,255,0.08)"/>
+                        <stop offset="75%" stop-color="rgba(255,255,255,0.2)"/>
+                        <stop offset="100%" stop-color="rgba(255,255,255,0.45)"/>
+                      </linearGradient>
+                      <clipPath id="cylinderClip">
+                        <rect x="30" y="25" width="30" height="190" rx="3"/>
+                      </clipPath>
+                    </defs>
+
+                    <!-- فوهة الصب ومقبض المخبار -->
+                    <path d="M22 25 L30 25 L30 28 L22 25 Z" fill="rgba(255,255,255,0.4)" stroke="#94a3b8"/>
+                    <!-- أنبوب المخبار الزجاجي -->
+                    <rect x="30" y="25" width="30" height="190" rx="3" fill="url(#glassCylGrad)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+                    <!-- قاعدة المخبار السداسية الثابتة -->
+                    <polygon points="15,225 75,225 82,238 8,238" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+                    <rect x="34" y="215" width="22" height="10" fill="#334155"/>
+
+                    <!-- السائل بداخل المخبار (مع تدرج الارتفاع) -->
+                    <g clip-path="url(#cylinderClip)">
+                      <rect id="cylinderLiquidRect" x="30" y="215" width="30" height="0" fill="#701a75" opacity="0.9" class="transition-all duration-500"/>
+                      <!-- سطح تقعر السائل (Meniscus) -->
+                      <ellipse id="cylinderMeniscus" cx="45" cy="215" rx="15" ry="3" fill="#a21caf" opacity="0" class="transition-all duration-500"/>
+                    </g>
+
+                    <!-- تدريجات المخبار من 1 إلى 10 مل -->
+                    <!-- الخط 10 مل (y=45) إلى الخط 1 مل (y=195) بمعدل 15px لكل مل -->
+                    <g font-size="7" fill="#94a3b8" font-family="monospace">
+                      <!-- 10 mL -->
+                      <line x1="48" y1="45" x2="60" y2="45" stroke="#cbd5e1" stroke-width="1.5"/>
+                      <text x="64" y="47">10</text>
+                      
+                      <!-- 8 mL -->
+                      <line x1="51" y1="75" x2="60" y2="75" stroke="#94a3b8" stroke-width="1.2"/>
+                      <text x="64" y="77">8</text>
+
+                      <!-- 6 mL -->
+                      <line x1="51" y1="105" x2="60" y2="105" stroke="#94a3b8" stroke-width="1.2"/>
+                      <text x="64" y="107">6</text>
+
+                      <!-- 5 mL (علامة بارزة) -->
+                      <line x1="46" y1="120" x2="60" y2="120" stroke="#f59e0b" stroke-width="2"/>
+                      <text x="64" y="122" font-weight="bold" fill="#f59e0b">5</text>
+
+                      <!-- 4 mL -->
+                      <line x1="51" y1="135" x2="60" y2="135" stroke="#94a3b8" stroke-width="1.2"/>
+                      <text x="64" y="137">4</text>
+
+                      <!-- 2 mL -->
+                      <line x1="51" y1="165" x2="60" y2="165" stroke="#94a3b8" stroke-width="1.2"/>
+                      <text x="64" y="167">2</text>
+
+                      <!-- 1 mL -->
+                      <line x1="53" y1="180" x2="60" y2="180" stroke="#94a3b8" stroke-width="1"/>
+                      <text x="64" y="182">1</text>
+                    </g>
+
+                    <!-- لمعان الزجاج الجانبي -->
+                    <line x1="33" y1="28" x2="33" y2="212" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+                  </svg>
+                  
+                  <div class="text-center mt-1">
+                    <span class="text-xs font-bold text-slate-300 block">مخبار مدرج (10 mL)</span>
+                    <span id="cylinderContentDisplay" class="text-[11px] font-mono text-purple-300 bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700 inline-block mt-0.5">
+                      0.0 mL (فارغ)
+                    </span>
+                  </div>
+                </div>
+
+                <!-- زر سكب السائل من المخبار إلى الكأس -->
+                <div class="mt-2 flex gap-1">
+                  <button id="pourCylinderBtn" onclick="pourCylinderToBeaker()" disabled class="px-2.5 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-[11px] font-bold rounded-lg transition shadow">
+                    صب في الكأس ⚗️
+                  </button>
+                  <button id="pourSlowBtn" onclick="pourSlowly()" disabled class="px-2 py-1 bg-amber-600/80 hover:bg-amber-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-[11px] font-bold rounded-lg transition" title="صب تدريجي ببطء مع التحريك">
+                    صب ببطء 💧
+                  </button>
+                </div>
+              </div>
+
+              <!-- مسار تدفق السائل عند الصب (Animated Pouring Stream) -->
+              <svg id="pourStreamSvg" class="absolute z-25 pointer-events-none opacity-0 transition-opacity duration-200" width="120" height="150" style="left: 42%; bottom: 120px;">
+                <path id="pourStreamPath" d="M20 10 Q 50 60, 60 140" stroke="#701a75" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.8"/>
+              </svg>
+
+              <!-- الكأس الزجاجي 100 مل (100 mL Beaker) -->
+              <div id="beakerContainer" class="flex flex-col items-center glassware z-10 mx-6">
+                <div class="relative">
+                  <!-- Beaker SVG -->
+                  <svg width="190" height="210" viewBox="0 0 190 210" fill="none" id="beakerSvg">
+                    <defs>
+                      <linearGradient id="glassBeakerGrad" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0.4)"/>
+                        <stop offset="20%" stop-color="rgba(255,255,255,0.06)"/>
+                        <stop offset="80%" stop-color="rgba(255,255,255,0.15)"/>
+                        <stop offset="100%" stop-color="rgba(255,255,255,0.5)"/>
+                      </linearGradient>
+
+                      <!-- قناع السائل داخل الكأس -->
+                      <clipPath id="beakerClip">
+                        <path d="M25 45 L25 185 C25 196, 35 204, 48 204 L142 204 C155 204, 165 196, 165 185 L165 45 Z"/>
+                      </clipPath>
+                    </defs>
+
+                    <!-- فوهة الكأس اليسرى المائلة للسكب -->
+                    <path d="M16 42 Q 25 44, 25 48" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" fill="none"/>
+                    <!-- جسم الكأس الزجاجي -->
+                    <path d="M25 45 L25 185 C25 198, 35 205, 48 205 L142 205 C155 205, 165 198, 165 185 L165 45 Z" fill="url(#glassBeakerGrad)" stroke="rgba(255,255,255,0.6)" stroke-width="3"/>
+                    
+                    <!-- السائل داخل الكأس -->
+                    <g clip-path="url(#beakerClip)">
+                      <rect id="beakerLiquidRect" x="25" y="205" width="140" height="0" fill="#701a75" opacity="0.9" class="transition-all duration-700"/>
+                      <!-- سطح السائل مع تماوج خفيف -->
+                      <ellipse id="beakerMeniscus" cx="95" cy="205" rx="70" ry="7" fill="#86198f" opacity="0" class="transition-all duration-500"/>
+                      
+                      <!-- دوامات التحريك (Stirring Vortex) تظهر عند التحريك -->
+                      <g id="vortexAnim" class="opacity-0 transition-opacity duration-300">
+                        <circle cx="95" cy="170" r="18" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-dasharray="10 5" fill="none" class="animate-spin" style="animation-duration: 1.2s;"/>
+                        <circle cx="95" cy="170" r="32" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="15 8" fill="none" class="animate-spin" style="animation-duration: 2s;"/>
+                      </g>
+                    </g>
+
+                    <!-- تدريجات الكأس: 20, 40, 60, 80, 100 mL -->
+                    <g font-size="9" fill="#cbd5e1" font-weight="bold" font-family="monospace">
+                      <!-- 100 mL (y=65) -->
+                      <line x1="25" y1="65" x2="48" y2="65" stroke="#e2e8f0" stroke-width="2"/>
+                      <text x="52" y="68">100 mL</text>
+
+                      <!-- 80 mL (y=95) -->
+                      <line x1="25" y1="95" x2="42" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+                      <text x="46" y="98">80</text>
+
+                      <!-- 60 mL (y=125) -->
+                      <line x1="25" y1="125" x2="42" y2="125" stroke="#cbd5e1" stroke-width="1.5"/>
+                      <text x="46" y="128">60</text>
+
+                      <!-- 40 mL (y=155) -->
+                      <line x1="25" y1="155" x2="42" y2="155" stroke="#cbd5e1" stroke-width="1.5"/>
+                      <text x="46" y="158">40</text>
+
+                      <!-- 20 mL (y=180) -->
+                      <line x1="25" y1="180" x2="44" y2="180" stroke="#cbd5e1" stroke-width="1.5"/>
+                      <text x="48" y="183">20</text>
+                    </g>
+
+                    <!-- علامة مواصفات الكأس الزجاجي (BORO 3.3) -->
+                    <text x="135" y="75" font-size="7" fill="#64748b" text-anchor="middle" font-family="sans-serif">PYREX®</text>
+                    <text x="135" y="84" font-size="6" fill="#475569" text-anchor="middle">100 mL</text>
+
+                    <!-- لمعان حافة الكأس -->
+                    <line x1="30" y1="48" x2="30" y2="185" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
+                  </svg>
+
+                  <div class="text-center mt-1">
+                    <span class="text-xs font-bold text-slate-200 block">كأس زجاجي (100 mL)</span>
+                    <span id="beakerStatusText" class="text-[11px] text-slate-400 bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700 inline-block mt-0.5">
+                      فارغ وجاهز للتجربة
+                    </span>
+                  </div>
+                </div>
+
+                <!-- أزرار التحكم بالكأس: التحريك وإضافة قطرات -->
+                <div class="mt-2 flex flex-wrap justify-center gap-1.5">
+                  <button id="stirButton" onclick="toggleStirring()" class="px-3 py-1 bg-amber-600/80 hover:bg-amber-500 text-white text-xs font-bold rounded-lg transition shadow flex items-center gap-1">
+                    <span id="stirIcon">🌀</span>
+                    <span id="stirText">تحريك بالساق</span>
+                  </button>
+                  <button onclick="emptyBeaker()" class="px-2.5 py-1 bg-slate-800 hover:bg-rose-900/60 border border-slate-700 text-slate-300 hover:text-rose-200 text-xs rounded-lg transition" title="تفريغ الكأس للبدء من جديد">
+                    🗑️ تفريغ
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- لوح طاولة المختبر السفلي (Bench Tabletop Surface) -->
+            <div class="bench-tabletop py-3 px-6 relative z-10 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div class="flex items-center gap-3 flex-wrap">
+                <span class="text-slate-300 font-bold flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  أزرار دفعات التكرار (3 مرات):
+                </span>
+                <!-- أزرار الدفعات الثلاث الصريحة -->
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <button id="btnBatch1" onclick="addBatch(1)" class="px-2.5 py-1 bg-purple-600/80 hover:bg-purple-500 text-white rounded-lg text-[11px] font-bold shadow transition flex items-center gap-1">
+                    <span>1️⃣</span> إضافة الدفعة 1 (5 mL)
+                  </button>
+                  <button id="btnBatch2" onclick="addBatch(2)" class="px-2.5 py-1 bg-fuchsia-700/80 hover:bg-fuchsia-600 text-white rounded-lg text-[11px] font-bold shadow transition flex items-center gap-1">
+                    <span>2️⃣</span> تكرار الإضافة: الدفعة 2 (5 mL)
+                  </button>
+                  <button id="btnBatch3" onclick="addBatch(3)" class="px-2.5 py-1 bg-cyan-600/80 hover:bg-cyan-500 text-white rounded-lg text-[11px] font-bold shadow transition flex items-center gap-1">
+                    <span>3️⃣</span> تكرار الإضافة: الدفعة 3 (زوال اللون) ✨
+                  </button>
+                </div>
+
+                <!-- فاصل صغير وأزرار الإضافة الدقيقة -->
+                <div class="hidden sm:flex items-center gap-1 bg-slate-800/90 p-1 rounded-lg border border-slate-700">
+                  <span class="text-[10px] text-slate-400 px-1">دقيق:</span>
+                  <button onclick="addNaHSO3Direct(0.5)" class="px-1.5 py-0.5 bg-slate-700 hover:bg-cyan-600 text-cyan-200 hover:text-white rounded text-[10px] font-bold transition">
+                    +0.5
+                  </button>
+                  <button onclick="addNaHSO3Direct(1.0)" class="px-1.5 py-0.5 bg-slate-700 hover:bg-cyan-600 text-cyan-200 hover:text-white rounded text-[10px] font-bold transition">
+                    +1.0
+                  </button>
+                </div>
+              </div>
+
+              <!-- مؤشر التحريك الحالي -->
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400">حالة التحريك:</span>
+                <span id="stirIndicatorBadge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-slate-400 border border-slate-700">
+                  متوقف ⏸️
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- بطاقة معادلة التفاعل الكيميائي والتفسير العلمي -->
+          <div class="glass-card rounded-2xl p-4 border border-slate-700/80 flex flex-col gap-2 shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-purple-400 flex items-center gap-1">
+                <span>🔬</span> المعادلة الكيميائية المفسرة للتفاعل (الأكسدة والاختزال):
+              </span>
+              <span class="text-[11px] text-slate-400 bg-slate-800/90 px-2 py-0.5 rounded border border-slate-700">
+                أيونات البرمنجنات ⟵ عامل مؤكسد قوي
+              </span>
+            </div>
+            
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-700/60 overflow-x-auto text-center" dir="ltr">
+              <span class="font-mono text-sm md:text-base font-bold text-slate-100">
+                <span class="text-fuchsia-400">2MnO₄⁻</span> <sub class="text-xs text-slate-400">(aq)</sub> + 
+                <span class="text-cyan-300">5HSO₃⁻</span> <sub class="text-xs text-slate-400">(aq)</sub> + 
+                <span class="text-amber-300">H⁺</span> <sub class="text-xs text-slate-400">(aq)</sub> 
+                ⟶ 
+                <span class="text-emerald-300">2Mn²⁺</span> <sub class="text-xs text-slate-400">(aq)</sub> + 
+                <span class="text-teal-300">5SO₄²⁻</span> <sub class="text-xs text-slate-400">(aq)</sub> + 
+                <span class="text-blue-300">3H₂O</span> <sub class="text-xs text-slate-400">(l)</sub>
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-300 pt-1">
+              <div class="bg-purple-950/30 p-2 rounded-lg border border-purple-500/20">
+                <b class="text-fuchsia-300">أيونات البرمنجنات (MnO₄⁻):</b> لونها بنفسجي غامق جذاب، تكتسب إلكترونات وتُختزل إلى أيونات المنجنيز (Mn²⁺) عديمة اللون.
+              </div>
+              <div class="bg-cyan-950/30 p-2 rounded-lg border border-cyan-500/20">
+                <b class="text-cyan-300">أيونات كبريتيت الهيدروجين (HSO₃⁻):</b> تفقد إلكترونات وتتأكسد إلى كبريتات (SO₄²⁻).
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- العمود الأيسر: لوحة القياسات الحية، مقياس الطيف الضوئي، والملاحظات (4 أعمدة) -->
+        <div class="lg:col-span-4 flex flex-col gap-4">
+          
+          <!-- مقياس الطيف الضوئي الافتراضي (Spectrophotometer) وشدة اللون -->
+          <div class="glass-card rounded-2xl p-4 border border-purple-500/30 flex flex-col gap-3 shadow-lg">
+            <div class="flex items-center justify-between border-b border-slate-700/80 pb-2">
+              <span class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+                <span>📟</span> مقياس الطيف الضوئي (Spectrophotometer)
+              </span>
+              <span class="text-[10px] bg-purple-900/50 text-purple-200 px-2 py-0.5 rounded font-mono">
+                λ = 525 nm
+              </span>
+            </div>
+
+            <!-- شاشة الجهاز الرقمية -->
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col gap-2.5">
+              
+              <!-- عينة اللون الحالية -->
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-slate-400">لون المحلول الحالي:</span>
+                <div class="flex items-center gap-2">
+                  <span id="meterColorHex" class="text-[11px] font-mono text-slate-300">#701a75</span>
+                  <div id="meterColorSwatch" class="w-6 h-6 rounded-lg border-2 border-slate-600 shadow transition-all duration-500" style="background-color: #701a75;"></div>
+                </div>
+              </div>
+
+              <!-- قراءة الامتصاصية والنفاذية -->
+              <div class="grid grid-cols-2 gap-2 text-center pt-1">
+                <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span class="text-[10px] text-slate-400 block">الامتصاصية (A)</span>
+                  <span id="meterAbsorbance" class="text-lg font-mono font-black text-fuchsia-400">1.250</span>
+                </div>
+                <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span class="text-[10px] text-slate-400 block">النفاذية (%T)</span>
+                  <span id="meterTransmittance" class="text-lg font-mono font-black text-cyan-400">5.6 %</span>
+                </div>
+              </div>
+
+              <!-- شريط زوال اللون المئوي -->
+              <div class="space-y-1">
+                <div class="flex justify-between text-[11px]">
+                  <span class="text-slate-400">نسبة اختفاء اللون:</span>
+                  <span id="meterBleachPercent" class="font-bold text-emerald-400">0%</span>
+                </div>
+                <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                  <div id="meterBleachBar" class="h-full bg-gradient-to-r from-purple-600 to-emerald-400 w-0 transition-all duration-500"></div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- منحنى التفاعل البياني المباشر (Mini Chart) -->
+            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800 flex flex-col gap-1">
+              <span class="text-[10px] font-bold text-slate-400 flex items-center justify-between">
+                <span>📉 منحنى تغير الامتصاصية مع الحجم المضاف:</span>
+                <span class="text-[9px] text-purple-400">A vs V(NaHSO₃)</span>
+              </span>
+              <canvas id="reactionMiniChart" width="300" height="110" class="w-full bg-slate-900/70 rounded-lg"></canvas>
+            </div>
+          </div>
+
+          <!-- بطاقة سجل الملاحظات السريعة (Quick Lab Notes) -->
+          <div class="glass-card rounded-2xl p-4 border border-slate-700/80 flex flex-col gap-3 shadow-md">
+            <div class="flex items-center justify-between border-b border-slate-700/80 pb-2">
+              <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                <span>📋</span> جدول الملاحظات المسجلة
+              </span>
+              <button onclick="clearNotesTable()" class="text-[10px] text-slate-400 hover:text-rose-300 transition">
+                مسح السجل
+              </button>
+            </div>
+
+            <div class="overflow-y-auto max-h-48 text-xs">
+              <table class="w-full text-right border-collapse">
+                <thead>
+                  <tr class="text-[10px] text-slate-400 border-b border-slate-700">
+                    <th class="py-1">الحجم المضاف</th>
+                    <th class="py-1">لون المحلول</th>
+                    <th class="py-1">الملاحظة</th>
+                  </tr>
+                </thead>
+                <tbody id="notesTableBody" class="divide-y divide-slate-800/80 font-mono text-[11px]">
+                  <tr class="text-slate-400">
+                    <td class="py-1.5">0.0 mL</td>
+                    <td class="py-1.5 text-fuchsia-400">بنفسجي داكن</td>
+                    <td class="py-1.5 font-sans">بدء التجربة (5 mL برمنجنات)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- زر إضافة ملاحظة يدوية من الطالب -->
+            <button onclick="recordCurrentObservation()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5">
+              <span>✍️</span>
+              <span>تسجيل الملاحظة الحالية في الجدول</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TAB 2: المستوى الجزيئي والأيوني (MOLECULAR LEVEL SUBMICROSCOPIC VIEW) -->
+    <section id="tab-molecules" class="hidden flex-col gap-4">
+      <div class="glass-card rounded-2xl p-4 md:p-6 border border-cyan-500/30 flex flex-col gap-4 shadow-xl">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-700 pb-3">
+          <div>
+            <h2 class="text-lg md:text-xl font-black text-cyan-300 flex items-center gap-2">
+              <span>⚛️</span> المحاكاة المجهرية على المستوى الجزيئي (Submicroscopic Simulation)
+            </h2>
+            <p class="text-xs text-slate-300 mt-1">
+              شاهد تصادم أيونات البرمنجنات (MnO₄⁻) البنفسجية مع أيونات كبريتيت الهيدروجين (HSO₃⁻) وتحولها إلى أيونات المنجنيز (Mn²⁺) عديمة اللون طبقاً لنظرية التصادم.
+            </p>
+          </div>
+          
+          <!-- مفتاح الأيونات في المحاكاة -->
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <span class="inline-flex items-center gap-1 bg-purple-900/40 border border-purple-500/40 px-2.5 py-1 rounded-lg">
+              <span class="w-3 h-3 rounded-full bg-purple-600 shadow"></span>
+              <span class="text-purple-200">MnO₄⁻ (بنفسجي)</span>
+            </span>
+            <span class="inline-flex items-center gap-1 bg-cyan-900/40 border border-cyan-500/40 px-2.5 py-1 rounded-lg">
+              <span class="w-3 h-3 rounded-full bg-cyan-400 shadow"></span>
+              <span class="text-cyan-200">HSO₃⁻ (أزرق فاتح)</span>
+            </span>
+            <span class="inline-flex items-center gap-1 bg-emerald-900/40 border border-emerald-500/40 px-2.5 py-1 rounded-lg">
+              <span class="w-3 h-3 rounded-full bg-emerald-400 shadow"></span>
+              <span class="text-emerald-200">Mn²⁺ (عديم اللون/شفاف)</span>
+            </span>
+            <span class="inline-flex items-center gap-1 bg-amber-900/40 border border-amber-500/40 px-2.5 py-1 rounded-lg">
+              <span class="w-3 h-3 rounded-full bg-amber-400 shadow"></span>
+              <span class="text-amber-200">SO₄²⁻ (كبريتات)</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- مساحة عرض الأيونات التفاعلية (Canvas) -->
+        <div class="relative w-full h-[400px] bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden shadow-inner">
+          <canvas id="molecularCanvas" class="w-full h-full block"></canvas>
+
+          <!-- شريط تحكم بسرعة وتصادم الجسيمات -->
+          <div class="absolute bottom-3 left-3 right-3 bg-slate-900/90 backdrop-blur-md p-3 rounded-xl border border-slate-700/80 flex flex-wrap items-center justify-between text-xs gap-3">
+            <div class="flex items-center gap-4">
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400">سرعة الجسيمات:</span>
+                <input type="range" id="particleSpeedSlider" min="0.5" max="3" step="0.1" value="1.2" oninput="updateParticleSpeed(this.value)" class="w-24 accent-purple-500">
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400">أيونات MnO₄⁻ المتبقية:</span>
+                <b id="molPurpleCount" class="text-purple-400 font-mono text-sm">24</b>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400">أيونات Mn²⁺ الناتجة:</span>
+                <b id="molClearCount" class="text-emerald-400 font-mono text-sm">0</b>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="injectReactantMolecules()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-bold transition flex items-center gap-1 shadow">
+                <span>➕</span> ضخ دفعة NaHSO₃
+              </button>
+              <button onclick="resetMolecularSim()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 rounded-lg transition">
+                إعادة ضبط الجزيئات
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 3: مقارنة أسلوب الإضافة (سؤال 2 في الكتاب) -->
+    <section id="tab-compare" class="hidden flex-col gap-4">
+      <div class="glass-card rounded-2xl p-4 md:p-6 border border-amber-500/30 flex flex-col gap-4 shadow-xl">
+        
+        <div class="border-b border-slate-700 pb-3">
+          <div class="inline-flex items-center gap-1.5 bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full text-xs font-bold mb-1 border border-amber-500/30">
+            <span>تحليل النتائج • السؤال 2 في الكتاب المدرسي</span>
+          </div>
+          <h2 class="text-lg md:text-xl font-black text-slate-100">
+            لماذا تُعد إضافة محلول NaHSO₃ ببطء مع التحريك أسلوباً تجريبياً أفضل من إضافته مرة واحدة؟
+          </h2>
+          <p class="text-xs text-slate-300 mt-1">
+            قارن عملياً بين أسلوبين في الإضافة ولاحظ الفروق الجوهرية في تجانس التفاعل ودقة تحديد نقطة التكافؤ.
+          </p>
+        </div>
+
+        <!-- المقارنة التفاعلية بين الكأسين أ و ب -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          
+          <!-- الكأس (أ): الإضافة البطيئة مع التحريك المستمر (الأسلوب الموصى به) -->
+          <div class="bg-slate-900/90 rounded-2xl p-4 border-2 border-emerald-500/40 flex flex-col gap-3 relative shadow-lg">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-bold border border-emerald-500/40">
+                الكأس (أ): إضافة بطيئة + تحريك مستمر (المثالي) ✓
+              </span>
+              <span class="text-xs text-emerald-400 font-bold">النتيجة: ممتازة</span>
+            </div>
+
+            <!-- عرض الكأس أ -->
+            <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center relative overflow-hidden">
+              <div id="compareBeakerA" class="w-28 h-36 rounded-b-2xl border-2 border-slate-500 relative flex items-end justify-center overflow-hidden transition-all duration-700">
+                <div id="compareLiquidA" class="w-full h-1/2 bg-purple-700/90 transition-all duration-700 flex items-center justify-center">
+                  <span id="compareVortexA" class="text-white text-xs opacity-0 animate-spin">🌀</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-1.5 text-xs text-slate-300">
+              <p class="flex items-start gap-1.5">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span>توزيع متجانس للجزيئات وزيادة فرص التصادم الفعال.</span>
+              </p>
+              <p class="flex items-start gap-1.5">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span>رصد دقيق لنقطة زوال اللون دون استهلاك مادة فائضة.</span>
+              </p>
+              <p class="flex items-start gap-1.5">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span>تدرج لوني واضح وسلس يمكن قياسه بدقة.</span>
+              </p>
+            </div>
+
+            <button onclick="runComparisonTest('slow')" class="mt-auto py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-black shadow transition">
+              محاكاة الإضافة البطيئة مع التحريك
+            </button>
+          </div>
+
+          <!-- الكأس (ب): الإضافة دفعة واحدة دون تحريك كافٍ (الأسلوب الخاطئ) -->
+          <div class="bg-slate-900/90 rounded-2xl p-4 border-2 border-rose-500/40 flex flex-col gap-3 relative shadow-lg">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 bg-rose-500/20 text-rose-300 rounded-full text-xs font-bold border border-rose-500/40">
+                الكأس (ب): سكب سريع دفعة واحدة دون تحريك ✗
+              </span>
+              <span class="text-xs text-rose-400 font-bold">النتيجة: غير دقيقة</span>
+            </div>
+
+            <!-- عرض الكأس ب -->
+            <div class="h-44 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center relative overflow-hidden">
+              <div id="compareBeakerB" class="w-28 h-36 rounded-b-2xl border-2 border-slate-500 relative flex items-end justify-center overflow-hidden transition-all duration-700">
+                <!-- طبقات غير متجانسة: سائل شفاف بالأعلى وجيوب بنفسجية كثيفة بالقاع -->
+                <div id="compareLiquidB" class="w-full h-1/2 bg-gradient-to-t from-purple-900 via-purple-700 to-sky-200/40 transition-all duration-700 relative">
+                  <div class="absolute bottom-1 right-2 w-8 h-8 rounded-full bg-purple-950 blur-xs opacity-90"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-1.5 text-xs text-slate-300">
+              <p class="flex items-start gap-1.5">
+                <span class="text-rose-400 font-bold">✗</span>
+                <span>تفاعل موضعي في منطقة التماس فقط وتكون طبقات غير متجانسة.</span>
+              </p>
+              <p class="flex items-start gap-1.5">
+                <span class="text-rose-400 font-bold">✗</span>
+                <span>تجاوز نقطة التكافؤ واستهلاك كمية مجهولة من المادة الفائضة.</span>
+              </p>
+              <p class="flex items-start gap-1.5">
+                <span class="text-rose-400 font-bold">✗</span>
+                <span>احتمالية طرطشة المحلول الكيميائي لعدم التأني.</span>
+              </p>
+            </div>
+
+            <button onclick="runComparisonTest('fast')" class="mt-auto py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-black shadow transition">
+              محاكاة السكب دفعة واحدة دون تحريك
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 4: دفتر النتائج والتقييم والاختبار (LAB REPORT & ASSESSMENT) -->
+    <section id="tab-report" class="hidden flex-col gap-4">
+      <div class="glass-card rounded-2xl p-4 md:p-6 border border-purple-500/30 flex flex-col gap-6 shadow-xl">
+        
+        <!-- الترويسة -->
+        <div class="border-b border-slate-700 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <span class="px-2.5 py-0.5 bg-purple-500/20 text-purple-300 rounded-full text-xs font-bold border border-purple-500/30">
+              تقرير المختبر المدرسي والتقييم الذاتي
+            </span>
+            <h2 class="text-xl font-black text-slate-100 mt-1">
+              تحليل النتائج والاستقصاء (من واقع كتاب الكيمياء)
+            </h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="printLabReport()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5">
+              <span>🖨️</span>
+              <span>طباعة / تصدير التقرير PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- بيانات الطالب والمدرسة -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-xs">
+          <div>
+            <label class="block text-slate-400 mb-1">اسم الطالب / الطالبة:</label>
+            <input type="text" id="studentNameInput" placeholder="اكتب اسمك هنا..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-200 focus:border-purple-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">الصف / الشعبة:</label>
+            <input type="text" id="studentClassInput" value="ثاني ثانوي (مسارات)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-200 focus:border-purple-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">المعلم المشرف:</label>
+            <input type="text" id="teacherNameInput" placeholder="اسم معلم الكيمياء..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-200 focus:border-purple-500 outline-none">
+          </div>
+        </div>
+
+        <!-- الأسئلة التفاعلية من الكتاب المدرسي -->
+        <div class="space-y-4">
+          
+          <!-- السؤال 1 من الكتاب -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700/80 space-y-3">
+            <div class="flex items-start gap-2">
+              <span class="w-6 h-6 rounded-full bg-purple-600 text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+              <div>
+                <h3 class="text-sm font-bold text-slate-100">
+                  حدد الدليل الذي لاحظته على حدوث تفاعل كيميائي؟
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">اختر الإجابة الأدق علمياً بناءً على ما شاهدته في المختبر:</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-2 text-xs">
+              <label class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 hover:border-purple-500 cursor-pointer transition">
+                <input type="radio" name="q1" value="a" class="accent-purple-500">
+                <span>تكون راسب أبيض صلب في قاع الكأس مع فوران غازي.</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 hover:border-purple-500 cursor-pointer transition">
+                <input type="radio" name="q1" value="b" class="accent-purple-500">
+                <span><b>اختفاء وزوال اللون البنفسجي</b> لمحلول برمنجنات البوتاسيوم وتحوله إلى محلول شفاف عديم اللون.</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 hover:border-purple-500 cursor-pointer transition">
+                <input type="radio" name="q1" value="c" class="accent-purple-500">
+                <span>انخفاض درجة الحرارة وتجمد المحلول داخل الكأس.</span>
+              </label>
+            </div>
+            
+            <div id="q1Feedback" class="hidden p-2.5 rounded-lg text-xs font-semibold"></div>
+          </div>
+
+          <!-- السؤال 2 من الكتاب -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700/80 space-y-3">
+            <div class="flex items-start gap-2">
+              <span class="w-6 h-6 rounded-full bg-purple-600 text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+              <div>
+                <h3 class="text-sm font-bold text-slate-100">
+                  وضح لماذا تُعد إضافة محلول NaHSO₃ ببطء مع التحريك أسلوباً تجريبياً أفضل من إضافته مرة واحدة؟
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">فسر السبب العلمي من وجهة نظر مهارات الاستقصاء والقياس:</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-2 text-xs">
+              <label class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 hover:border-purple-500 cursor-pointer transition">
+                <input type="radio" name="q2" value="a" class="accent-purple-500">
+                <span>لأن الإضافة البطيئة تمنع تبخر المحلول في الهواء الجوي بشكل كلي.</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 hover:border-purple-500 cursor-pointer transition">
+                <input type="radio" name="q2" value="b" class="accent-purple-500">
+                <span>لضمان <b>اختلاط المتفاعلات وتصادمها بانتظام</b>، ورصد <b>نقطة التكافؤ الدقيقة لزوال اللون</b> دون إضافة كمية فائضة.</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 hover:border-purple-500 cursor-pointer transition">
+                <input type="radio" name="q2" value="c" class="accent-purple-500">
+                <span>لأن التحريك يزيد من وزن الكأس الزجاجي ويجعل الحسابات الحجمية أسهل.</span>
+              </label>
+            </div>
+
+            <div id="q2Feedback" class="hidden p-2.5 rounded-lg text-xs font-semibold"></div>
+          </div>
+
+          <!-- سؤال الاستقصاء من الكتاب -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700/80 space-y-3">
+            <div class="flex items-start gap-2">
+              <span class="w-6 h-6 rounded-full bg-amber-600 text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+              <div>
+                <h3 class="text-sm font-bold text-amber-300">
+                  استقصاء: هل يحدث شيء آخر إذا ما تابعنا إضافة محلول NaHSO₃ إلى الكأس بعد زوال اللون؟ وضح إجابتك.
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">توقع ما يطرأ على المحلول بعد استهلاك كامل البرمنجنات:</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-2 text-xs">
+              <label class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 hover:border-purple-500 cursor-pointer transition">
+                <input type="radio" name="q3" value="a" class="accent-purple-500">
+                <span>سيعود اللون البنفسجي للظهور من جديد فجأة وبشدة أعلى.</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 hover:border-purple-500 cursor-pointer transition">
+                <input type="radio" name="q3" value="b" class="accent-purple-500">
+                <span><b>لا يحدث تغير ملحوظ في اللون</b>؛ لأن مادة KMnO₄ استهلكت كلياً، وتتراكم مادة NaHSO₃ كمادة فائضة ويتغير تركيز الأيونات فقط.</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 hover:border-purple-500 cursor-pointer transition">
+                <input type="radio" name="q3" value="c" class="accent-purple-500">
+                <span>ينفجر الكأس وتتحول المكونات إلى غاز الأكسجين النقي فقط.</span>
+              </label>
+            </div>
+
+            <div id="q3Feedback" class="hidden p-2.5 rounded-lg text-xs font-semibold"></div>
+          </div>
+
+        </div>
+
+        <!-- زر تقييم الإجابات وعرض الشهادة -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+          <button onclick="evaluateReportQuiz()" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-2">
+            <span>✓</span>
+            <span>تصحيح الإجابات ورصد الدرجة</span>
+          </button>
+          <div id="quizScoreDisplay" class="text-sm font-bold text-slate-300"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-slate-900 border-t border-slate-800 px-4 py-3 text-center text-xs text-slate-400 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>
+        مختبر كيمياء افتراضي تفاعلي • مصمم ومطابق لمنهج وزارة التعليم بالمملكة العربية السعودية (كيمياء 2-2)
+      </p>
+      <div class="flex items-center gap-3">
+        <span class="text-purple-400 font-bold">الفصل الخامس: الحسابات الكيميائية</span>
+        <span>|</span>
+        <span class="text-cyan-400">التجربة الاستهلالية</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== MODALS (النوافذ المنبثقة) ==================== -->
+  
+  <!-- نافذة تعليمات السلامة في المختبر -->
+  <div id="safetyModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="glass-card-bright rounded-3xl max-w-lg w-full p-6 text-slate-900 shadow-2xl border border-slate-200 relative animate-gentle-pulse" style="animation-iteration-count: 1;">
+      <button onclick="closeSafetyModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold">
+        ✕
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl font-black">
+          ⚠️
+        </div>
+        <div>
+          <h3 class="text-lg font-black text-slate-900">تعليمات السلامة في المختبر (الخطوة 1)</h3>
+          <p class="text-xs text-slate-500">إرشادات هامة قبل البدء بالتعامل مع الكواشف الكيميائية</p>
+        </div>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-700 mb-5">
+        <div class="flex items-start gap-2.5 p-2.5 bg-amber-50 rounded-xl border border-amber-200">
+          <span class="text-base">🥽</span>
+          <div>
+            <b class="text-amber-900 block">ارتداء نظارات الوقاية والقفازات:</b>
+            محلول برمنجنات البوتاسيوم (KMnO₄) مادة مؤكسدة قوية قد تسبب بقعاً دائمة على الجلد وتلفاً للملابس.
+          </div>
+        </div>
+
+        <div class="flex items-start gap-2.5 p-2.5 bg-sky-50 rounded-xl border border-sky-200">
+          <span class="text-base">🧪</span>
+          <div>
+            <b class="text-sky-900 block">نظافة الأدوات الزجاجية:</b>
+            يجب غسل المخبار المدرج وتجفيفه تماماً قبل قياس المادة الثانية لتجنب حدوث تفاعل مبكر داخل المخبار.
+          </div>
+        </div>
+
+        <div class="flex items-start gap-2.5 p-2.5 bg-purple-50 rounded-xl border border-purple-200">
+          <span class="text-base">💧</span>
+          <div>
+            <b class="text-purple-900 block">الإضافة البطيئة والتحريك:</b>
+            أضف محلول كبريتيت الصوديوم الهيدروجيني ببطء قطرة قطرة مع التحريك لضمان سلامتك ودقة رصد اختفاء اللون.
+          </div>
+        </div>
+      </div>
+
+      <button onclick="confirmSafetyAndProceed()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black rounded-xl text-sm shadow-lg transition">
+        أقر بالالتزام بتعليمات السلامة والبدء في التجربة ✓
+      </button>
+    </div>
+  </div>
+
+  <!-- نافذة مبروك إكمال التفاعل (نقطة التكافؤ واختفاء اللون) -->
+  <div id="congratsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="glass-card rounded-3xl max-w-md w-full p-6 text-center text-slate-100 shadow-2xl border border-emerald-500/40 relative">
+      <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 text-3xl flex items-center justify-center mx-auto mb-3 border border-emerald-500/40 animate-bounce">
+        ✨
+      </div>
+      <h3 class="text-xl font-black text-emerald-300">اكتمل التفاعل واختفى اللون البنفسجي!</h3>
+      <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+        أحسنت! اختفى اللون البنفسجي تماماً وأصبح المحلول صافياً وعديم اللون، مما يؤكد اختزال كامل أيونات <span class="text-purple-300 font-bold">MnO₄⁻</span> إلى أيونات <span class="text-cyan-300 font-bold">Mn²⁺</span>.
+      </p>
+
+      <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-700 my-4 text-xs font-mono text-right space-y-1">
+        <div class="flex justify-between">
+          <span class="text-slate-400 font-sans">حجم KMnO₄ الابتدائي:</span>
+          <span class="text-purple-400">5.0 mL</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400 font-sans">الحجم المستهلك من NaHSO₃:</span>
+          <span id="congratsVolumeAdded" class="text-cyan-400">12.5 mL</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400 font-sans">الدليل الملاحظ:</span>
+          <span class="text-emerald-400 font-sans">زوال اللون البنفسجي (عديم اللون)</span>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="goToReportTab()" class="flex-1 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-xl text-xs shadow transition">
+          الانتقال لدفتر النتائج وحل الأسئلة 📝
+        </button>
+        <button onclick="closeCongratsModal()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs transition">
+          متابعة الاستكشاف
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT SIMULATION LOGIC ==================== -->
+  <script>
+    /* =========================================================================
+       1. GLOBAL STATE & EXPERIMENT CONSTANTS
+       ========================================================================= */
+    const STATE = {
+      currentStep: 1, // 1 to 6
+      safetyAccepted: false,
+      audioEnabled: true,
+      
+      // Beaker State
+      beakerVolume: 0.0,       // Total volume in beaker (mL)
+      kmno4InitialVol: 0.0,    // Initial volume of KMnO4 added (mL)
+      nahso3AddedVol: 0.0,     // Total volume of NaHSO3 added (mL)
+      kmno4RemainingMoles: 0,  // Remaining moles of KMnO4
+      initialKmno4Moles: 0,
+      isStirring: false,
+      stirInterval: null,
+      
+      // Cylinder State
+      cylinderVolume: 0.0,     // Liquid currently in cylinder (mL)
+      cylinderContent: null,   // 'KMnO4', 'NaHSO3', or null
+      cylinderIsClean: true,   // Has it been washed and dried?
+      
+      // Reaction Calculations
+      reactionProgress: 0,     // 0 (dark purple) to 1 (clear)
+      isReactionComplete: false,
+
+      // Observations log
+      observations: []
+    };
+
+    // Constant stoichiometric values:
+    // 5 mL of 0.01 M KMnO4
+    // تكرار خطوات الإضافة 3 مرات (5 mL في كل مرة = 15 mL إجمالاً حتى يختفي اللون تماماً)
+    const EQUIVALENCE_VOLUME_ML = 15.0;
+
+    // Steps configuration based on textbook
+    const STEPS = [
+      {
+        num: 1,
+        title: "الخطوة 1: قراءة تعليمات السلامة في المختبر",
+        instruction: "اقرأ تعليمات السلامة أولاً، وتأكد من ارتداء نظارات الوقاية والقفازات لحماية عينيك ويديك من برمنجنات البوتاسيوم.",
+        hint: "انقر على زر 'تأكيد السلامة والبدء' للانتقال إلى قياس محلول KMnO₄.",
+        buttonText: "تأكيد السلامة والبدء ⬅️"
+      },
+      {
+        num: 2,
+        title: "الخطوة 2: قياس 5 mL من محلول KMnO₄ وسكبها في الكأس",
+        instruction: "اضغط على زجاجة برمنجنات البوتاسيوم KMnO₄ لسحب 5 mL في المخبار المدرج، ثم اضغط زر 'صب في الكأس'.",
+        hint: "لاحظ اللون البنفسجي الداكن للمحلول داخل الكأس الزجاجي (100 mL).",
+        buttonText: "تم قياس وصب KMnO₄ ⬅️"
+      },
+      {
+        num: 3,
+        title: "الخطوة 3 (الإضافة 1): إضافة الدفعة الأولى (5 mL) من NaHSO₃ مع التحريك",
+        instruction: "أضف أول 5 mL من محلول NaHSO₃ ببطء إلى الكأس مع الاستمرار في التحريك بالساق الزجاجية، ولاحظ بدء بهتان اللون.",
+        hint: "ينخفض تركيز أيونات MnO₄⁻ ويتحول اللون من بنفسجي غامق إلى بنفسجي متوسط/فاتح.",
+        buttonText: "إضافة الدفعة الأولى (5 mL) ⬅️"
+      },
+      {
+        num: 4,
+        title: "الخطوة 4 (تكرار 1): إضافة الدفعة الثانية (5 mL) من NaHSO₃ مع التحريك",
+        instruction: "كرر إضافة 5 mL أخرى من محلول NaHSO₃ (المجموع 10 mL) بعد تنظيف المخبار، مع استمرار التحريك.",
+        hint: "يتلاشى اللون البنفسجي أكثر ويتحول المحلول إلى وردي شاحب جداً (لافندر خفيف).",
+        buttonText: "تكرار الإضافة: الدفعة الثانية (5 mL) ⬅️"
+      },
+      {
+        num: 5,
+        title: "الخطوة 5 (تكرار 2): إضافة الدفعة الثالثة (5 mL) حتى يختفي اللون تماماً",
+        instruction: "كرر إضافة الدفعة الثالثة (5 mL NaHSO₃) وتوقف فور اختفاء وزوال اللون البنفسجي تماماً ليصبح المحلول شفافاً وصافياً كلياً!",
+        hint: "تستهلك كامل أيونات MnO₄⁻ وتتحول إلى أيونات Mn²⁺ عديمة اللون (اكتمال الأكسدة والاختزال).",
+        buttonText: "الدفعة الثالثة وزوال اللون تماماً ✨"
+      },
+      {
+        num: 6,
+        title: "الخطوة 6: تحليل النتائج والاستقصاء في دفتر المختبر",
+        instruction: "أحسنت! اختفى اللون تماماً بعد 3 دفعات من الإضافة. انتقل الآن إلى دفتر النتائج للإجابة عن أسئلة التحليل والاستقصاء.",
+        hint: "أجب عن الأسئلة الثلاثة من الكتاب واطبع تقريرك العلمي الرسمي.",
+        buttonText: "الانتقال لتحليل النتائج 📝"
+      }
+    ];
+
+    /* =========================================================================
+       2. WEB AUDIO API SYNTHETIC SOUND EFFECTS (ZERO DEPENDENCIES)
+       ========================================================================= */
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSound(type) {
+      if (!STATE.audioEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+
+        if (type === 'pour') {
+          // صوت انسكاب سائل خرير مائي واقعي باستخدام ضوضاء مصفاة (Filtered Noise)
+          const bufferSize = ctx.sampleRate * 0.45;
+          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.5));
+          }
+          const noise = ctx.createBufferSource();
+          noise.buffer = buffer;
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(950, now);
+          filter.Q.setValueAtTime(3.0, now);
+          filter.frequency.exponentialRampToValueAtTime(450, now + 0.45);
+
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.45);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          noise.start(now);
+
+        } else if (type === 'drop') {
+          // صوت قطرة ماء نقية (Bubble / Plop drop)
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(500, now);
+          osc.frequency.exponentialRampToValueAtTime(1400, now + 0.08);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+
+        } else if (type === 'stir') {
+          // صوت حك الساق الزجاجية والدوامة
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(280 + Math.random() * 40, now);
+          gain.gain.setValueAtTime(0.04, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.18);
+
+        } else if (type === 'clean') {
+          // صوت بخاخ الماء
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.linearRampToValueAtTime(1200, now + 0.2);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.25);
+
+        } else if (type === 'chime' || type === 'success') {
+          // نغمة نجاح وتكافؤ بهيجة
+          const notes = [523.25, 659.25, 783.99, 1046.50]; // C E G C
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+            gain.gain.setValueAtTime(0.18, now + idx * 0.09);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.09);
+            osc.stop(now + idx * 0.09 + 0.35);
+          });
+        }
+      } catch (err) {
+        console.warn('Audio error:', err);
+      }
+    }
+
+    function toggleAudio() {
+      STATE.audioEnabled = !STATE.audioEnabled;
+      const btn = document.getElementById('audioToggleBtn');
+      const icon = document.getElementById('audioIcon');
+      if (STATE.audioEnabled) {
+        icon.textContent = '🔊';
+        btn.classList.remove('opacity-50');
+      } else {
+        icon.textContent = '🔇';
+        btn.classList.add('opacity-50');
+      }
+    }
+
+    /* =========================================================================
+       2-B. FULLSCREEN CONTROLLER (التحكم في ملء الشاشة)
+       ========================================================================= */
+    function toggleAppFullscreen() {
+      const docEl = document.documentElement;
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+
+      if (!isFs) {
+        if (docEl.requestFullscreen) {
+          docEl.requestFullscreen();
+        } else if (docEl.webkitRequestFullscreen) {
+          docEl.webkitRequestFullscreen();
+        } else if (docEl.mozRequestFullScreen) {
+          docEl.mozRequestFullScreen();
+        } else if (docEl.msRequestFullscreen) {
+          docEl.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+      playSound('drop');
+    }
+
+    function updateFullscreenUI() {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+      const icon = document.getElementById('fullscreenIcon');
+      const text = document.getElementById('fullscreenText');
+      if (icon) icon.textContent = isFs ? '🗗' : '⛶';
+      if (text) text.textContent = isFs ? 'إنهاء ملء الشاشة' : 'ملء الشاشة';
+
+      const benchFsBtn = document.getElementById('benchFsBtnIcon');
+      if (benchFsBtn) {
+        benchFsBtn.textContent = isFs ? '🗗' : '⛶';
+      }
+    }
+
+    document.addEventListener('fullscreenchange', updateFullscreenUI);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenUI);
+    document.addEventListener('mozfullscreenchange', updateFullscreenUI);
+    document.addEventListener('MSFullscreenChange', updateFullscreenUI);
+
+    /* =========================================================================
+       3. NAVIGATION & TABS
+       ========================================================================= */
+    function switchTab(tabId) {
+      const tabs = ['lab', 'molecules', 'compare', 'report'];
+      tabs.forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        if (el) el.classList.add('hidden');
+      });
+
+      const activeEl = document.getElementById(`tab-${tabId}`);
+      if (activeEl) {
+        activeEl.classList.remove('hidden');
+        if (tabId === 'lab') activeEl.classList.add('flex');
+        if (tabId === 'molecules') activeEl.classList.add('flex');
+        if (tabId === 'compare') activeEl.classList.add('flex');
+        if (tabId === 'report') activeEl.classList.add('flex');
+      }
+
+      // أزرار التبديل
+      const navBtns = {
+        'lab': document.getElementById('navLabBtn'),
+        'molecules': document.getElementById('navMoleculeBtn'),
+        'compare': document.getElementById('navCompareBtn'),
+        'report': document.getElementById('navReportBtn')
+      };
+
+      Object.keys(navBtns).forEach(k => {
+        const btn = navBtns[k];
+        if (!btn) return;
+        if (k === tabId) {
+          btn.className = "px-3 py-1.5 rounded-lg transition-all bg-purple-600 text-white shadow-md flex items-center gap-1.5 font-bold";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-slate-100 flex items-center gap-1.5 font-bold";
+        }
+      });
+
+      if (tabId === 'molecules') {
+        initMolecularSimulation();
+      }
+    }
+
+    function openSafetyModal() {
+      document.getElementById('safetyModal').classList.remove('hidden');
+    }
+    function closeSafetyModal() {
+      document.getElementById('safetyModal').classList.add('hidden');
+    }
+
+    function confirmSafetyAndProceed() {
+      STATE.safetyAccepted = true;
+      closeSafetyModal();
+      setStep(2);
+      playSound('chime');
+    }
+
+    /* =========================================================================
+       4. GUIDED STEPPER LOGIC
+       ========================================================================= */
+    function setStep(stepNum) {
+      if (stepNum > STEPS.length) return;
+      STATE.currentStep = stepNum;
+      const step = STEPS[stepNum - 1];
+
+      document.getElementById('stepTitleDisplay').textContent = step.title;
+      document.getElementById('stepInstructionText').textContent = step.instruction;
+      document.getElementById('stepHintText').textContent = "تلميح: " + step.hint;
+      document.getElementById('stepActionBtn').innerHTML = `<span>${step.buttonText}</span>`;
+      
+      const pct = (stepNum / STEPS.length) * 100;
+      document.getElementById('stepProgressBar').style.width = `${pct}%`;
+      document.getElementById('stepProgressText').textContent = `${stepNum} / ${STEPS.length}`;
+    }
+
+    function handleStepAction() {
+      if (STATE.currentStep === 1) {
+        openSafetyModal();
+      } else if (STATE.currentStep === 2) {
+        if (STATE.kmno4InitialVol < 5.0) {
+          // قياس وصب KMnO4
+          clickReagentBottle('KMnO4');
+          setTimeout(() => pourCylinderToBeaker(), 700);
+        } else {
+          setStep(3);
+        }
+      } else if (STATE.currentStep === 3) {
+        // إضافة الدفعة الأولى (5 mL)
+        addBatch(1);
+      } else if (STATE.currentStep === 4) {
+        // تكرار الإضافة: الدفعة الثانية (5 mL)
+        addBatch(2);
+      } else if (STATE.currentStep === 5) {
+        // تكرار الإضافة: الدفعة الثالثة (5 mL) - زوال اللون تماماً
+        addBatch(3);
+      } else if (STATE.currentStep === 6) {
+        switchTab('report');
+      }
+    }
+
+    /* =========================================================================
+       4-B. THREE-BATCH REPETITION SYSTEM (تكرار خطوات الإضافة 3 مرات)
+       ========================================================================= */
+    function addBatch(batchNum) {
+      if (STATE.kmno4InitialVol <= 0) {
+        alert("تنبيه: يجب قياس ووضع 5 mL من برمنجنات البوتاسيوم KMnO₄ أولاً في الكأس!");
+        if (STATE.currentStep === 1 || STATE.currentStep === 2) {
+          clickReagentBottle('KMnO4');
+          setTimeout(() => pourCylinderToBeaker(), 700);
+        }
+        return;
+      }
+
+      if (batchNum === 1) {
+        if (STATE.nahso3AddedVol >= 5.0) {
+          alert("الدفعة الأولى (5 mL) مضافة بالفعل! يمكنك إضافة الدفعة الثانية.");
+          return;
+        }
+        performBatchAddition(1, 5.0, "بنفسجي متوسط", "الدفعة 1 (5 mL): بهتان وتراجع شدة اللون البنفسجي الأولي.");
+      } else if (batchNum === 2) {
+        if (STATE.nahso3AddedVol < 5.0) {
+          alert("يرجى إضافة الدفعة الأولى (5 mL) أولاً!");
+          return;
+        }
+        if (STATE.nahso3AddedVol >= 10.0) {
+          alert("الدفعة الثانية (10 mL إجمالاً) مضافة بالفعل! يمكنك إضافة الدفعة الثالثة.");
+          return;
+        }
+        performBatchAddition(2, 5.0, "وردي شاحب", "الدفعة 2 (10 mL إجمالاً): استمرار التفاعل وتحول المحلول إلى وردي فاتح (لافندر).");
+      } else if (batchNum === 3) {
+        if (STATE.nahso3AddedVol < 10.0) {
+          alert("يرجى إضافة الدفعتين الأولى والثانية أولاً!");
+          return;
+        }
+        if (STATE.nahso3AddedVol >= 15.0) {
+          alert("الدفعة الثالثة مضافة بالفعل واختفى اللون تماماً!");
+          return;
+        }
+        performBatchAddition(3, 5.0, "عديم اللون (شفاف كلياً)", "الدفعة 3 (15 mL إجمالاً): اكتمال التفاعل واختفاء وزوال اللون البنفسجي تماماً وتكون أيونات Mn²⁺ الشفافة!");
+      }
+    }
+
+    function performBatchAddition(batchNum, volAmount, colorLabel, note) {
+      // 1. تنظيف وتجهيز المخبار وسحب 5 mL NaHSO3
+      cleanCylinder();
+      setTimeout(() => {
+        clickReagentBottle('NaHSO3');
+
+        // 2. تشغيل التحريك بالساق
+        if (!STATE.isStirring) {
+          toggleStirring();
+        }
+
+        // 3. صب السائل ببطء مع أنيميشن التدفق
+        setTimeout(() => {
+          animatePourStream('NaHSO3', () => {
+            STATE.cylinderVolume = 0.0;
+            STATE.cylinderContent = null;
+            updateCylinderVisuals();
+
+            // تحديث الحجم وحسابات التفاعل
+            STATE.nahso3AddedVol += volAmount;
+            STATE.beakerVolume += volAmount;
+
+            const molesNaHSO3Added = volAmount * 0.001 * 0.01;
+            const molesKMnO4Consumed = molesNaHSO3Added * (2.0 / 5.0);
+            STATE.kmno4RemainingMoles = Math.max(0, STATE.kmno4RemainingMoles - molesKMnO4Consumed);
+
+            STATE.reactionProgress = Math.min(1.0, STATE.nahso3AddedVol / EQUIVALENCE_VOLUME_ML);
+
+            updateBeakerVisuals();
+            updateBatchTrackerUI();
+            recordObservation(STATE.nahso3AddedVol, colorLabel, note);
+
+            if (batchNum === 1) {
+              setStep(4);
+              playSound('drop');
+            } else if (batchNum === 2) {
+              setStep(5);
+              playSound('drop');
+            } else if (batchNum === 3) {
+              checkReactionCompletion();
+            }
+          });
+        }, 500);
+      }, 300);
+    }
+
+    function updateBatchTrackerUI() {
+      const vol = STATE.nahso3AddedVol;
+
+      const card1 = document.getElementById('batchCard1');
+      const dot1 = document.getElementById('batchDot1');
+      const col1 = document.getElementById('batchColor1');
+
+      const card2 = document.getElementById('batchCard2');
+      const dot2 = document.getElementById('batchDot2');
+      const col2 = document.getElementById('batchColor2');
+
+      const card3 = document.getElementById('batchCard3');
+      const dot3 = document.getElementById('batchDot3');
+      const col3 = document.getElementById('batchColor3');
+
+      const btn1 = document.getElementById('btnBatch1');
+      const btn2 = document.getElementById('btnBatch2');
+      const btn3 = document.getElementById('btnBatch3');
+
+      if (!card1 || !card2 || !card3) return;
+
+      // Batch 1 Status
+      if (vol >= 5.0) {
+        card1.className = "p-2 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-center flex flex-col items-center gap-1 shadow";
+        dot1.className = "w-2.5 h-2.5 rounded-full bg-emerald-400";
+        col1.innerHTML = `<b class="text-emerald-300">✓ تم (بنفسجي فاتح)</b>`;
+        if (btn1) btn1.className = "px-2.5 py-1 bg-emerald-800 text-slate-200 rounded-lg text-[11px] font-bold opacity-80 cursor-default";
+      } else {
+        card1.className = "cursor-pointer p-2 rounded-xl border-2 border-purple-500 bg-purple-950/40 text-center flex flex-col items-center gap-1 hover:border-purple-300 shadow animate-pulse";
+        dot1.className = "w-2.5 h-2.5 rounded-full bg-purple-400 animate-ping";
+        col1.textContent = "اضغط للإضافة (5 mL)";
+        if (btn1) btn1.className = "px-2.5 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-[11px] font-bold shadow animate-pulse";
+      }
+
+      // Batch 2 Status
+      if (vol >= 10.0) {
+        card2.className = "p-2 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-center flex flex-col items-center gap-1 shadow";
+        dot2.className = "w-2.5 h-2.5 rounded-full bg-emerald-400";
+        col2.innerHTML = `<b class="text-emerald-300">✓ تم (وردي شاحب)</b>`;
+        if (btn2) btn2.className = "px-2.5 py-1 bg-emerald-800 text-slate-200 rounded-lg text-[11px] font-bold opacity-80 cursor-default";
+      } else if (vol >= 5.0) {
+        card2.className = "cursor-pointer p-2 rounded-xl border-2 border-fuchsia-500 bg-fuchsia-950/40 text-center flex flex-col items-center gap-1 hover:border-fuchsia-300 shadow animate-pulse";
+        dot2.className = "w-2.5 h-2.5 rounded-full bg-fuchsia-400 animate-ping";
+        col2.textContent = "اضغط للتكرار (10 mL)";
+        if (btn2) btn2.className = "px-2.5 py-1 bg-fuchsia-600 hover:bg-fuchsia-500 text-white rounded-lg text-[11px] font-bold shadow animate-pulse";
+      } else {
+        card2.className = "p-2 rounded-xl border border-slate-800 bg-slate-900/60 text-center flex flex-col items-center gap-1 opacity-50";
+        dot2.className = "w-2.5 h-2.5 rounded-full bg-slate-600";
+        col2.textContent = "وردي شاحب";
+        if (btn2) btn2.className = "px-2.5 py-1 bg-slate-800 text-slate-400 rounded-lg text-[11px] font-bold opacity-60";
+      }
+
+      // Batch 3 Status
+      if (vol >= 15.0) {
+        card3.className = "p-2 rounded-xl border-2 border-emerald-400 bg-emerald-900/60 text-center flex flex-col items-center gap-1 shadow-lg";
+        dot3.className = "w-2.5 h-2.5 rounded-full bg-emerald-300 animate-ping";
+        col3.innerHTML = `<b class="text-emerald-300">✓ زال اللون تماماً ✨</b>`;
+        if (btn3) btn3.className = "px-2.5 py-1 bg-emerald-700 text-white rounded-lg text-[11px] font-bold cursor-default";
+      } else if (vol >= 10.0) {
+        card3.className = "cursor-pointer p-2 rounded-xl border-2 border-cyan-400 bg-cyan-950/50 text-center flex flex-col items-center gap-1 hover:border-cyan-200 shadow animate-pulse";
+        dot3.className = "w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping";
+        col3.textContent = "اضغط لزوال اللون (15 mL)";
+        if (btn3) btn3.className = "px-2.5 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-[11px] font-bold shadow animate-pulse";
+      } else {
+        card3.className = "p-2 rounded-xl border border-slate-800 bg-slate-900/60 text-center flex flex-col items-center gap-1 opacity-50";
+        dot3.className = "w-2.5 h-2.5 rounded-full bg-slate-600";
+        col3.textContent = "زوال اللون تماماً ✨";
+        if (btn3) btn3.className = "px-2.5 py-1 bg-slate-800 text-slate-400 rounded-lg text-[11px] font-bold opacity-60";
+      }
+    }
+
+    /* =========================================================================
+       5. INTERACTIVE APPARATUS: REAGENTS & POURING
+       ========================================================================= */
+    
+    // سحب محلول من الزجاجات إلى المخبار
+    function clickReagentBottle(chemical) {
+      if (STATE.cylinderVolume > 0 && STATE.cylinderContent !== chemical) {
+        alert("تنبيه: المخبار يحتوي على مادة أخرى! يرجى غسله وتجفيفه أولاً.");
+        return;
+      }
+
+      if (!STATE.cylinderIsClean && chemical === 'NaHSO3') {
+        alert("تنبيه: يجب تنظيف وتجفيف المخبار المدرج أولاً قبل وضع NaHSO₃ وفق الخطوة 3 في الكتاب!");
+        return;
+      }
+
+      STATE.cylinderVolume = 5.0; // 5 mL كما في الكتاب
+      STATE.cylinderContent = chemical;
+      STATE.cylinderIsClean = false;
+
+      updateCylinderVisuals();
+      playSound('pour');
+
+      // تفعيل أزرار الصب
+      document.getElementById('pourCylinderBtn').disabled = false;
+      document.getElementById('pourSlowBtn').disabled = false;
+
+      if (chemical === 'KMnO4' && STATE.currentStep === 2) {
+        // تحديث إرشادي
+      } else if (chemical === 'NaHSO3' && STATE.currentStep === 4) {
+        setStep(5);
+      }
+    }
+
+    // تنظيف وتجفيف المخبار
+    function cleanCylinder() {
+      STATE.cylinderVolume = 0.0;
+      STATE.cylinderContent = null;
+      STATE.cylinderIsClean = true;
+
+      updateCylinderVisuals();
+      playSound('clean');
+
+      document.getElementById('pourCylinderBtn').disabled = true;
+      document.getElementById('pourSlowBtn').disabled = true;
+
+      const badge = document.getElementById('cylinderCleanBadge');
+      badge.textContent = 'نظيف وجاف ✓';
+      badge.className = 'absolute -top-1 -right-1 px-1.5 py-0.2 bg-emerald-600 text-white text-[9px] font-bold rounded-full border border-emerald-300 animate-pulse';
+      setTimeout(() => badge.classList.remove('animate-pulse'), 1500);
+
+      if (STATE.currentStep === 3) {
+        setStep(4);
+      }
+    }
+
+    // تحديث المظهر المرئي للمخبار المدرج
+    function updateCylinderVisuals() {
+      const liquidRect = document.getElementById('cylinderLiquidRect');
+      const meniscus = document.getElementById('cylinderMeniscus');
+      const contentDisplay = document.getElementById('cylinderContentDisplay');
+
+      // ارتفاع المخبار 190px يمثل 10 mL => 15px لكل 1 mL
+      // يبدأ القاع عند y=215
+      const heightPx = (STATE.cylinderVolume / 10.0) * 150;
+      const topY = 215 - heightPx;
+
+      liquidRect.setAttribute('height', heightPx);
+      liquidRect.setAttribute('y', topY);
+      meniscus.setAttribute('cy', topY);
+      meniscus.setAttribute('opacity', STATE.cylinderVolume > 0 ? '0.7' : '0');
+
+      if (STATE.cylinderContent === 'KMnO4') {
+        liquidRect.setAttribute('fill', '#701a75');
+        meniscus.setAttribute('fill', '#a21caf');
+        contentDisplay.innerHTML = `<span class="text-fuchsia-400 font-bold">${STATE.cylinderVolume.toFixed(1)} mL (KMnO₄)</span>`;
+      } else if (STATE.cylinderContent === 'NaHSO3') {
+        liquidRect.setAttribute('fill', '#e0f2fe');
+        meniscus.setAttribute('fill', '#bae6fd');
+        contentDisplay.innerHTML = `<span class="text-cyan-300 font-bold">${STATE.cylinderVolume.toFixed(1)} mL (NaHSO₃)</span>`;
+      } else {
+        liquidRect.setAttribute('fill', 'transparent');
+        contentDisplay.innerHTML = `0.0 mL (فارغ)`;
+      }
+
+      const cleanBadge = document.getElementById('cylinderCleanBadge');
+      if (STATE.cylinderIsClean) {
+        cleanBadge.textContent = 'نظيف ✓';
+        cleanBadge.className = 'absolute -top-1 -right-1 px-1.5 py-0.2 bg-emerald-600 text-white text-[9px] font-bold rounded-full border border-emerald-300';
+      } else {
+        cleanBadge.textContent = 'مستعمل ⚠️';
+        cleanBadge.className = 'absolute -top-1 -right-1 px-1.5 py-0.2 bg-amber-600 text-white text-[9px] font-bold rounded-full border border-amber-300';
+      }
+    }
+
+    // سكب السائل من المخبار إلى الكأس
+    function pourCylinderToBeaker() {
+      if (STATE.cylinderVolume <= 0) return;
+
+      const volToPour = STATE.cylinderVolume;
+      const chemical = STATE.cylinderContent;
+
+      animatePourStream(chemical, () => {
+        if (chemical === 'KMnO4') {
+          STATE.kmno4InitialVol += volToPour;
+          STATE.beakerVolume += volToPour;
+          STATE.initialKmno4Moles = STATE.kmno4InitialVol * 0.001 * 0.01;
+          STATE.kmno4RemainingMoles = STATE.initialKmno4Moles;
+          recordObservation(0.0, "بنفسجي داكن", "وضع 5 mL من محلول KMnO₄ بتركيز 0.01M في الكأس.");
+          if (STATE.currentStep === 2) setStep(3);
+        } else if (chemical === 'NaHSO3') {
+          addNaHSO3Direct(volToPour);
+        }
+
+        STATE.cylinderVolume = 0.0;
+        STATE.cylinderContent = null;
+        updateCylinderVisuals();
+        updateBeakerVisuals();
+
+        document.getElementById('pourCylinderBtn').disabled = true;
+        document.getElementById('pourSlowBtn').disabled = true;
+      });
+    }
+
+    // صب ببطء مع التحريك
+    function pourSlowly() {
+      if (STATE.cylinderVolume <= 0) return;
+      if (!STATE.isStirring) {
+        toggleStirring();
+      }
+
+      let step = 0;
+      const totalSteps = 5;
+      const increment = STATE.cylinderVolume / totalSteps;
+      const chemical = STATE.cylinderContent;
+
+      const interval = setInterval(() => {
+        step++;
+        if (STATE.cylinderVolume >= increment) {
+          STATE.cylinderVolume -= increment;
+          if (chemical === 'NaHSO3') {
+            addNaHSO3Direct(increment, true);
+          } else {
+            STATE.beakerVolume += increment;
+            STATE.kmno4InitialVol += increment;
+          }
+          playSound('drop');
+          updateCylinderVisuals();
+          updateBeakerVisuals();
+        }
+
+        if (step >= totalSteps || STATE.cylinderVolume <= 0.05) {
+          clearInterval(interval);
+          STATE.cylinderVolume = 0.0;
+          STATE.cylinderContent = null;
+          updateCylinderVisuals();
+          updateBeakerVisuals();
+          document.getElementById('pourCylinderBtn').disabled = true;
+          document.getElementById('pourSlowBtn').disabled = true;
+        }
+      }, 400);
+    }
+
+    // أنيميشن تيار الصب
+    function animatePourStream(chemical, onComplete) {
+      const stream = document.getElementById('pourStreamSvg');
+      const path = document.getElementById('pourStreamPath');
+      path.setAttribute('stroke', chemical === 'KMnO4' ? '#701a75' : '#bae6fd');
+      stream.style.opacity = '1';
+      playSound('pour');
+
+      // إمالة المخبار قليلاً
+      const cyl = document.getElementById('cylinderContainer');
+      cyl.style.transform = 'rotate(-25deg) translateY(-15px) translateX(25px)';
+
+      setTimeout(() => {
+        stream.style.opacity = '0';
+        cyl.style.transform = 'none';
+        if (onComplete) onComplete();
+      }, 700);
+    }
+
+    /* =========================================================================
+       6. CHEMICAL REACTION CALCULATIONS & BEAKER DYNAMICS
+       ========================================================================= */
+    function addNaHSO3Direct(volMl, isSlow = false) {
+      if (STATE.kmno4InitialVol <= 0) {
+        alert("تنبيه: يجب وضع محلول برمنجنات البوتاسيوم KMnO₄ في الكأس أولاً!");
+        return;
+      }
+
+      STATE.nahso3AddedVol += volMl;
+      STATE.beakerVolume += volMl;
+
+      // الحسابات الكيميائية الدقيقة:
+      // KMnO4 moles consumed = NaHSO3 moles added * (2/5)
+      const molesNaHSO3Added = volMl * 0.001 * 0.01;
+      const molesKMnO4Consumed = molesNaHSO3Added * (2.0 / 5.0);
+      
+      STATE.kmno4RemainingMoles = Math.max(0, STATE.kmno4RemainingMoles - molesKMnO4Consumed);
+
+      // نسبة تقدم التفاعل (0 إلى 1)
+      STATE.reactionProgress = Math.min(1.0, STATE.nahso3AddedVol / EQUIVALENCE_VOLUME_ML);
+
+      // مؤثرات صوتية
+      if (isSlow) {
+        playSound('drop');
+      } else {
+        playSound('pour');
+      }
+
+      // إذا لم يكن هناك تحريك، رد الفعل يكون غير متجانس موضعياً
+      if (!STATE.isStirring) {
+        // تنبيه لطيف حول أهمية التحريك
+        showFloatingNotification("تنبيه: التحريك مطلوب لخلط السائل بانتظام وتجنب تركز التفاعل في السطح فقط!");
+      }
+
+      updateBeakerVisuals();
+      updateBatchTrackerUI();
+      checkReactionCompletion();
+
+      // تسجيل تلقائي في جدول الملاحظات
+      if (STATE.nahso3AddedVol === 5.0) {
+        recordObservation(5.0, "بنفسجي فاتح", "الدفعة 1 (5 mL): بهتان اللون البنفسجي الأولي.");
+      } else if (STATE.nahso3AddedVol === 10.0) {
+        recordObservation(10.0, "وردي شاحب", "الدفعة 2 (10 mL): استمرار تلاشي اللون وتحوله لوردي فاتح.");
+      } else if (STATE.nahso3AddedVol >= EQUIVALENCE_VOLUME_ML && !STATE.isReactionComplete) {
+        recordObservation(STATE.nahso3AddedVol, "عديم اللون (شفاف كلياً)", "الدفعة 3 (15 mL): اختفاء اللون البنفسجي تماماً وتكون أيونات Mn²⁺ الشفافة!");
+      }
+    }
+
+    // حساب اللون الحالي للمحلول بناءً على نسبة البرمنجنات المتبقية
+    function calculateCurrentColor() {
+      if (STATE.kmno4InitialVol <= 0) {
+        return { hex: '#0f172a', r: 15, g: 23, b: 42, opacity: 0.1, label: 'فارغ' };
+      }
+
+      const p = STATE.reactionProgress; // 0 to 1
+
+      if (p >= 1.0) {
+        // عديم اللون تماماً (سائل شفاف رائق صافٍ كلياً كالماء)
+        return { hex: '#f0f9ff', r: 240, g: 249, b: 255, opacity: 0.35, label: 'عديم اللون (شفاف كلياً - اكتمال التفاعل)' };
+      }
+
+      // التدرج اللوني للدفعات الثلاث:
+      // قبل الإضافة (0 mL): بنفسجي داكن (#581c87)
+      // الدفعة 1 (5 mL مضاف): بنفسجي فاتح/متوسط (#9333ea)
+      // الدفعة 2 (10 mL مضاف): وردي شاحب لافندر (#fbcfe8)
+      // الدفعة 3 (15 mL مضاف): زوال اللون تماماً شفاف كلياً
+      let r, g, b, opacity, label;
+      if (p < 0.35) {
+        // من بنفسجي داكن إلى بنفسجي متوسط
+        const factor = p / 0.35;
+        r = Math.round(88 + factor * (147 - 88));
+        g = Math.round(28 + factor * (51 - 28));
+        b = Math.round(135 + factor * (234 - 135));
+        opacity = 0.9 - factor * 0.12;
+        label = p < 0.1 ? 'بنفسجي داكن (KMnO₄)' : 'بنفسجي فاتح (الدفعة 1)';
+      } else if (p < 0.75) {
+        // من بنفسجي متوسط إلى وردي شاحب
+        const factor = (p - 0.35) / 0.40;
+        r = Math.round(147 + factor * (244 - 147));
+        g = Math.round(51 + factor * (114 - 51));
+        b = Math.round(234 + factor * (182 - 234));
+        opacity = 0.78 - factor * 0.22;
+        label = 'وردي شاحب / لافندر (الدفعة 2)';
+      } else {
+        // من وردي شاحب جداً إلى شفاف
+        const factor = (p - 0.75) / 0.25;
+        r = Math.round(244 + factor * (240 - 244));
+        g = Math.round(114 + factor * (249 - 114));
+        b = Math.round(182 + factor * (255 - 182));
+        opacity = 0.56 - factor * 0.21;
+        label = 'تلاشي شبه تام للون';
+      }
+
+      const hex = rgbToHex(r, g, b);
+      return { hex, r, g, b, opacity, label };
+    }
+
+    function rgbToHex(r, g, b) {
+      return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    // تحديث كافة عناصر الكأس والعدادات والمقياس الطيفي
+    function updateBeakerVisuals() {
+      const color = calculateCurrentColor();
+      const liquidRect = document.getElementById('beakerLiquidRect');
+      const meniscus = document.getElementById('beakerMeniscus');
+
+      // سعة الكأس 100 mL، الارتفاع الإجمالي 160px => 1.6px لكل 1 mL
+      // يبدأ قاع الكأس عند y = 205
+      const heightPx = Math.min(155, Math.max(0, (STATE.beakerVolume / 100.0) * 160));
+      const topY = 205 - heightPx;
+
+      liquidRect.setAttribute('height', heightPx);
+      liquidRect.setAttribute('y', topY);
+      liquidRect.setAttribute('fill', color.hex);
+      liquidRect.setAttribute('opacity', color.opacity);
+
+      meniscus.setAttribute('cy', topY);
+      meniscus.setAttribute('fill', color.hex);
+      meniscus.setAttribute('opacity', STATE.beakerVolume > 0 ? (color.opacity + 0.15) : '0');
+
+      // تحديث النصوص
+      document.getElementById('beakerTotalVolume').textContent = `${STATE.beakerVolume.toFixed(1)} mL`;
+      document.getElementById('totalAddedNaHSO3').textContent = `${STATE.nahso3AddedVol.toFixed(1)} mL`;
+      
+      const badge = document.getElementById('colorStatusBadge');
+      badge.textContent = color.label;
+      badge.style.borderColor = color.hex;
+      badge.style.color = color.label.includes('عديم') ? '#38bdf8' : color.hex;
+
+      const beakerStatus = document.getElementById('beakerStatusText');
+      if (STATE.beakerVolume <= 0) {
+        beakerStatus.textContent = 'فارغ وجاهز للتجربة';
+      } else if (STATE.reactionProgress >= 1.0) {
+        beakerStatus.textContent = `محلول رائق عديم اللون (${STATE.beakerVolume.toFixed(1)} mL)`;
+      } else {
+        beakerStatus.textContent = `محلول ${color.label} (${STATE.beakerVolume.toFixed(1)} mL)`;
+      }
+
+      // تحديث شاشة مقياس الطيف الضوئي (Spectrophotometer)
+      updateSpectrophotometer(color);
+    }
+
+    function updateSpectrophotometer(color) {
+      const remainingRatio = 1.0 - STATE.reactionProgress; // 1 to 0
+      
+      // قانون بير-لامبرت: A = ε * b * c
+      // الامتصاصية القصوى عند 0 mL تساوي 1.250 تقريبا
+      const absorbance = Math.max(0.000, remainingRatio * 1.250).toFixed(3);
+      // النفاذية %T = 10^(-A) * 100
+      const transmittance = (Math.pow(10, -parseFloat(absorbance)) * 100).toFixed(1);
+      const bleachPct = (STATE.reactionProgress * 100).toFixed(0);
+
+      document.getElementById('meterAbsorbance').textContent = absorbance;
+      document.getElementById('meterTransmittance').textContent = `${transmittance} %`;
+      document.getElementById('meterBleachPercent').textContent = `${bleachPct} %`;
+      document.getElementById('meterBleachBar').style.width = `${bleachPct}%`;
+
+      document.getElementById('meterColorHex').textContent = color.hex;
+      document.getElementById('meterColorSwatch').style.backgroundColor = color.hex;
+
+      // رسم المنحنى البياني
+      drawReactionChart();
+    }
+
+    let observationCountdownTimer = null;
+
+    function checkReactionCompletion() {
+      if (STATE.reactionProgress >= 1.0 && !STATE.isReactionComplete) {
+        STATE.isReactionComplete = true;
+        playSound('success');
+
+        // مرحلة تأمل الملاحظة: نمنح الطالب وقتاً كافياً (6 ثوانٍ) لفحص الكأس ورؤية المحلول الشفاف
+        // دون إظهار خيار الانتقال للدفتر أو النافذة المنبثقة بشكل سريع ومفاجئ
+        handleDelayedNotebookTransition();
+      }
+    }
+
+    function handleDelayedNotebookTransition() {
+      // 1. تحديث شريط الخطوات ليركز على فحص وملاحظة النتيجة أولاً
+      document.getElementById('stepTitleDisplay').textContent = "الخطوة 5: تأمل ملاحظة زوال اللون وثبات المحلول الشفاف";
+      document.getElementById('stepInstructionText').textContent = "لاحظ اختفاء اللون البنفسجي تماماً وأصبح المحلول رائقاً وعديم اللون كلياً. خذ وقتك لتفحص الكأس واستقرار التفاعل وقراءة مقياس الطيف (A = 0.000).";
+      document.getElementById('stepHintText').textContent = "تلميح: يتم الآن تثبيت وملاحظة النتيجة في الكأس، وسيتاح خيار الانتقال للدفتر بعد قليل...";
+
+      const actionBtn = document.getElementById('stepActionBtn');
+      if (actionBtn) {
+        actionBtn.disabled = true;
+        actionBtn.className = "px-4 py-2 bg-slate-800 text-amber-300 rounded-xl text-xs font-bold border border-amber-500/40 cursor-wait flex items-center gap-1.5 transition-all";
+
+        let secondsLeft = 6;
+        actionBtn.innerHTML = `<span>⏳ تأمل وملاحظة زوال اللون (${secondsLeft} ثوانٍ)</span>`;
+
+        if (observationCountdownTimer) clearInterval(observationCountdownTimer);
+
+        observationCountdownTimer = setInterval(() => {
+          secondsLeft--;
+          if (secondsLeft > 0) {
+            actionBtn.innerHTML = `<span>⏳ تأمل وملاحظة زوال اللون (${secondsLeft} ثوانٍ)</span>`;
+          } else {
+            clearInterval(observationCountdownTimer);
+            observationCountdownTimer = null;
+
+            // بعد انتهاء فترة الملاحظة والتأمل (6 ثوانٍ كاملة)، يتاح الانتقال لدفتر النتائج بسلاسة
+            setStep(6);
+            actionBtn.disabled = false;
+            actionBtn.className = "px-4 py-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-600 hover:from-emerald-500 hover:to-indigo-500 text-white rounded-xl text-xs font-black shadow-lg shadow-emerald-900/40 transition flex items-center gap-1.5 animate-bounce";
+
+            // نافذة التهاني تظهر بهدوء بعد تأخير إضافي مريح (ثانيتين) حتى لا تقاطع المستخدم فجأة
+            setTimeout(() => {
+              if (STATE.isReactionComplete && STATE.currentStep === 6) {
+                document.getElementById('congratsVolumeAdded').textContent = `${STATE.nahso3AddedVol.toFixed(1)} mL`;
+                document.getElementById('congratsModal').classList.remove('hidden');
+              }
+            }, 2000);
+          }
+        }, 1000);
+      }
+
+      showFloatingNotification("✨ اختفى اللون البنفسجي تماماً وأصبح المحلول رائقاً! تفحص الكأس ومقياس الطيف بهدوء.");
+    }
+
+    function closeCongratsModal() {
+      document.getElementById('congratsModal').classList.add('hidden');
+    }
+
+    function goToReportTab() {
+      closeCongratsModal();
+      switchTab('report');
+    }
+
+    // تفريغ الكأس للبدء من جديد
+    function emptyBeaker() {
+      if (observationCountdownTimer) {
+        clearInterval(observationCountdownTimer);
+        observationCountdownTimer = null;
+      }
+      const actionBtn = document.getElementById('stepActionBtn');
+      if (actionBtn) actionBtn.disabled = false;
+
+      STATE.beakerVolume = 0.0;
+      STATE.kmno4InitialVol = 0.0;
+      STATE.nahso3AddedVol = 0.0;
+      STATE.kmno4RemainingMoles = 0;
+      STATE.reactionProgress = 0;
+      STATE.isReactionComplete = false;
+
+      updateBeakerVisuals();
+      updateBatchTrackerUI();
+      playSound('clean');
+    }
+
+    function resetLab() {
+      if (observationCountdownTimer) {
+        clearInterval(observationCountdownTimer);
+        observationCountdownTimer = null;
+      }
+      emptyBeaker();
+      cleanCylinder();
+      setStep(1);
+      STATE.observations = [];
+      updateBatchTrackerUI();
+      document.getElementById('notesTableBody').innerHTML = `
+        <tr class="text-slate-400">
+          <td class="py-1.5">0.0 mL</td>
+          <td class="py-1.5 text-fuchsia-400">بدء المختبر</td>
+          <td class="py-1.5 font-sans">تمت إعادة تهيئة الأدوات والمحاليل</td>
+        </tr>
+      `;
+    }
+
+    /* =========================================================================
+       7. STIRRING ROD INTERACTION & VORTEX
+       ========================================================================= */
+    function toggleStirring() {
+      STATE.isStirring = !STATE.isStirring;
+      const rodSvg = document.getElementById('stirringRodSvg');
+      const vortex = document.getElementById('vortexAnim');
+      const stirBtn = document.getElementById('stirButton');
+      const stirText = document.getElementById('stirText');
+      const stirIcon = document.getElementById('stirIcon');
+      const indicator = document.getElementById('stirIndicatorBadge');
+
+      if (STATE.isStirring) {
+        rodSvg.classList.add('animate-spin');
+        rodSvg.style.animationDuration = '1.2s';
+        vortex.classList.remove('opacity-0');
+        vortex.classList.add('opacity-100');
+
+        stirBtn.classList.replace('bg-amber-600/80', 'bg-emerald-600');
+        stirText.textContent = 'إيقاف التحريك';
+        stirIcon.textContent = '⏸️';
+        indicator.textContent = 'جارٍ التحريك بالساق 🌀';
+        indicator.className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-500/50 animate-pulse';
+
+        // تكرار صوت التحريك
+        STATE.stirInterval = setInterval(() => {
+          playSound('stir');
+        }, 1100);
+
+      } else {
+        rodSvg.classList.remove('animate-spin');
+        vortex.classList.add('opacity-0');
+        vortex.classList.remove('opacity-100');
+
+        stirBtn.classList.replace('bg-emerald-600', 'bg-amber-600/80');
+        stirText.textContent = 'تحريك بالساق';
+        stirIcon.textContent = '🌀';
+        indicator.textContent = 'متوقف ⏸️';
+        indicator.className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-slate-400 border border-slate-700';
+
+        if (STATE.stirInterval) {
+          clearInterval(STATE.stirInterval);
+          STATE.stirInterval = null;
+        }
+      }
+    }
+
+    /* =========================================================================
+       8. LIVE REACTION CHART (A vs V)
+       ========================================================================= */
+    function drawReactionChart() {
+      const canvas = document.getElementById('reactionMiniChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // رسم الشبكة الخلفية
+      ctx.strokeStyle = 'rgba(71, 85, 105, 0.3)';
+      ctx.lineWidth = 1;
+      for (let x = 30; x < w - 10; x += 35) {
+        ctx.beginPath();
+        ctx.moveTo(x, 10);
+        ctx.lineTo(x, h - 20);
+        ctx.stroke();
+      }
+      for (let y = 15; y < h - 20; y += 22) {
+        ctx.beginPath();
+        ctx.moveTo(30, y);
+        ctx.lineTo(w - 10, y);
+        ctx.stroke();
+      }
+
+      // محاور الإحداثيات
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      // Y axis
+      ctx.moveTo(30, 10);
+      ctx.lineTo(30, h - 20);
+      // X axis
+      ctx.lineTo(w - 10, h - 20);
+      ctx.stroke();
+
+      // عناوين المحاور
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '9px monospace';
+      ctx.fillText('0', 20, h - 18);
+      ctx.fillText('15mL', w - 30, h - 8);
+      ctx.fillText('A', 15, 15);
+
+      // منحنى انخفاض الامتصاصية النظري
+      ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(30, 18); // A = 1.25
+      const eqX = 30 + (EQUIVALENCE_VOLUME_ML / 15.0) * (w - 40);
+      ctx.lineTo(eqX, h - 20);
+      ctx.lineTo(w - 10, h - 20);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // النقطة الحالية للمستخدم
+      const currentVol = STATE.nahso3AddedVol;
+      const currX = Math.min(w - 15, 30 + (currentVol / 15.0) * (w - 40));
+      const currA = Math.max(0, 1.0 - STATE.reactionProgress);
+      const currY = (h - 20) - currA * (h - 38);
+
+      // خط التتبع المكتمل
+      ctx.strokeStyle = '#c084fc';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(30, 18);
+      ctx.lineTo(currX, currY);
+      ctx.stroke();
+
+      // نقطة المستخدم الحالية
+      ctx.fillStyle = '#38bdf8';
+      ctx.beginPath();
+      ctx.arc(currX, currY, 4.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    /* =========================================================================
+       9. OBSERVATIONS TABLE
+       ========================================================================= */
+    function recordObservation(vol, colorName, note) {
+      STATE.observations.push({ vol, colorName, note });
+      renderNotesTable();
+    }
+
+    function recordCurrentObservation() {
+      const color = calculateCurrentColor();
+      const vol = STATE.nahso3AddedVol;
+      let note = "";
+      if (vol === 0) note = "المحلول الأصلي قبل بدء إضافة NaHSO₃.";
+      else if (vol < 5) note = "بدء الإضافة البطيئة وملاحظة بقع تلاشي اللون.";
+      else if (vol < 10) note = "انخفاض تدريجي في شدة اللون البنفسجي.";
+      else if (vol >= EQUIVALENCE_VOLUME_ML) note = "اختفاء تام للون، تكون أيونات المنجنيز الشفافة.";
+      else note = "متابعة الإضافة مع استمرار التحريك.";
+
+      recordObservation(vol, color.label, note);
+      playSound('chime');
+    }
+
+    function renderNotesTable() {
+      const tbody = document.getElementById('notesTableBody');
+      if (STATE.observations.length === 0) {
+        tbody.innerHTML = `<tr class="text-slate-500"><td colspan="3" class="py-2 text-center font-sans">لا توجد ملاحظات مسجلة بعد</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = STATE.observations.map(o => `
+        <tr class="text-slate-300 hover:bg-slate-800/40 transition">
+          <td class="py-1.5 text-cyan-400 font-bold">${o.vol.toFixed(1)} mL</td>
+          <td class="py-1.5 text-fuchsia-300 font-sans">${o.colorName}</td>
+          <td class="py-1.5 text-slate-300 font-sans">${o.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function clearNotesTable() {
+      STATE.observations = [];
+      renderNotesTable();
+    }
+
+    /* =========================================================================
+       10. MOLECULAR LEVEL SIMULATION (CANVAS COLLISION THEORY)
+       ========================================================================= */
+    let molCanvas = null;
+    let molCtx = null;
+    let molParticles = [];
+    let molAnimationId = null;
+    let molSpeedFactor = 1.2;
+
+    function initMolecularSimulation() {
+      molCanvas = document.getElementById('molecularCanvas');
+      if (!molCanvas) return;
+      molCtx = molCanvas.getContext('2d');
+
+      // Adjust for device pixel ratio
+      const rect = molCanvas.parentElement.getBoundingClientRect();
+      molCanvas.width = rect.width;
+      molCanvas.height = rect.height;
+
+      // تهيئة الأيونات
+      molParticles = [];
+      const numPurple = 24; // MnO4-
+      for (let i = 0; i < numPurple; i++) {
+        molParticles.push(createParticle('MnO4', molCanvas.width, molCanvas.height));
+      }
+
+      updateMolecularCounts();
+
+      if (molAnimationId) cancelAnimationFrame(molAnimationId);
+      animateMolecularSim();
+    }
+
+    function createParticle(type, w, h) {
+      return {
+        type: type, // 'MnO4', 'HSO3', 'Mn2+', 'SO4'
+        x: Math.random() * (w - 60) + 30,
+        y: Math.random() * (h - 100) + 30,
+        vx: (Math.random() * 2 - 1) * molSpeedFactor,
+        vy: (Math.random() * 2 - 1) * molSpeedFactor,
+        radius: type === 'MnO4' ? 12 : (type === 'HSO3' ? 10 : 8),
+        glow: 0
+      };
+    }
+
+    function injectReactantMolecules() {
+      if (!molCanvas) return;
+      // ضخ 12 جزيء من HSO3
+      for (let i = 0; i < 12; i++) {
+        molParticles.push(createParticle('HSO3', molCanvas.width, molCanvas.height));
+      }
+      playSound('drop');
+      updateMolecularCounts();
+    }
+
+    function resetMolecularSim() {
+      initMolecularSimulation();
+    }
+
+    function updateParticleSpeed(val) {
+      molSpeedFactor = parseFloat(val);
+      molParticles.forEach(p => {
+        const speed = Math.hypot(p.vx, p.vy);
+        if (speed > 0) {
+          p.vx = (p.vx / speed) * molSpeedFactor * 1.5;
+          p.vy = (p.vy / speed) * molSpeedFactor * 1.5;
+        }
+      });
+    }
+
+    function updateMolecularCounts() {
+      const purple = molParticles.filter(p => p.type === 'MnO4').length;
+      const clear = molParticles.filter(p => p.type === 'Mn2+').length;
+      document.getElementById('molPurpleCount').textContent = purple;
+      document.getElementById('molClearCount').textContent = clear;
+    }
+
+    function animateMolecularSim() {
+      if (!molCtx || !molCanvas) return;
+      const w = molCanvas.width;
+      const h = molCanvas.height;
+
+      molCtx.fillStyle = '#020617';
+      molCtx.fillRect(0, 0, w, h);
+
+      // تحديث حركة وتصادم الجسيمات
+      for (let i = 0; i < molParticles.length; i++) {
+        const p = molParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // ارتداد من الجدران
+        if (p.x < p.radius) { p.x = p.radius; p.vx *= -1; }
+        if (p.x > w - p.radius) { p.x = w - p.radius; p.vx *= -1; }
+        if (p.y < p.radius) { p.y = p.radius; p.vy *= -1; }
+        if (p.y > h - 85 - p.radius) { p.y = h - 85 - p.radius; p.vy *= -1; }
+
+        // فحص التصادم بين MnO4 و HSO3 (التفاعل الكيميائي)
+        for (let j = i + 1; j < molParticles.length; j++) {
+          const p2 = molParticles[j];
+          const dx = p2.x - p.x;
+          const dy = p2.y - p.y;
+          const dist = Math.hypot(dx, dy);
+
+          if (dist < p.radius + p2.radius) {
+            // ارتداد مرن
+            const angle = Math.atan2(dy, dx);
+            p.vx = -Math.cos(angle) * molSpeedFactor;
+            p.vy = -Math.sin(angle) * molSpeedFactor;
+            p2.vx = Math.cos(angle) * molSpeedFactor;
+            p2.vy = Math.sin(angle) * molSpeedFactor;
+
+            // هل حدث تفاعل بين متفاعلين؟
+            if ((p.type === 'MnO4' && p2.type === 'HSO3') || (p.type === 'HSO3' && p2.type === 'MnO4')) {
+              // تحول تفاعلي (أكسدة واختزال)
+              p.type = 'Mn2+';
+              p.radius = 8;
+              p2.type = 'SO4';
+              p2.radius = 9;
+              p.glow = 15;
+              p2.glow = 15;
+              playSound('drop');
+              updateMolecularCounts();
+            }
+          }
+        }
+
+        // رسم الجسيم
+        molCtx.save();
+        if (p.type === 'MnO4') {
+          // برمنجنات بنفسجية (ذرة منجنيز وأربع ذرات أكسجين)
+          molCtx.fillStyle = '#9333ea';
+          molCtx.beginPath();
+          molCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          molCtx.fill();
+          molCtx.strokeStyle = '#e9d5ff';
+          molCtx.lineWidth = 1.5;
+          molCtx.stroke();
+          
+          molCtx.fillStyle = '#ffffff';
+          molCtx.font = 'bold 8px sans-serif';
+          molCtx.textAlign = 'center';
+          molCtx.textBaseline = 'middle';
+          molCtx.fillText('MnO₄⁻', p.x, p.y);
+
+        } else if (p.type === 'HSO3') {
+          // كبريتيت الهيدروجين أزرق سماوي
+          molCtx.fillStyle = '#06b6d4';
+          molCtx.beginPath();
+          molCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          molCtx.fill();
+          molCtx.strokeStyle = '#cffafe';
+          molCtx.lineWidth = 1.5;
+          molCtx.stroke();
+
+          molCtx.fillStyle = '#082f49';
+          molCtx.font = 'bold 7px sans-serif';
+          molCtx.textAlign = 'center';
+          molCtx.textBaseline = 'middle';
+          molCtx.fillText('HSO₃⁻', p.x, p.y);
+
+        } else if (p.type === 'Mn2+') {
+          // أيون المنجنيز الشفاف/الأخضر الفاتح (عديم اللون)
+          molCtx.fillStyle = 'rgba(52, 211, 153, 0.4)';
+          molCtx.beginPath();
+          molCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          molCtx.fill();
+          molCtx.strokeStyle = '#34d399';
+          molCtx.lineWidth = 1.5;
+          molCtx.stroke();
+
+          molCtx.fillStyle = '#ecfdf5';
+          molCtx.font = 'bold 7px sans-serif';
+          molCtx.textAlign = 'center';
+          molCtx.textBaseline = 'middle';
+          molCtx.fillText('Mn²⁺', p.x, p.y);
+
+        } else if (p.type === 'SO4') {
+          // كبريتات أصفر/كهرماني
+          molCtx.fillStyle = 'rgba(251, 191, 36, 0.5)';
+          molCtx.beginPath();
+          molCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          molCtx.fill();
+          molCtx.strokeStyle = '#fbbf24';
+          molCtx.lineWidth = 1.5;
+          molCtx.stroke();
+
+          molCtx.fillStyle = '#fef3c7';
+          molCtx.font = 'bold 7px sans-serif';
+          molCtx.textAlign = 'center';
+          molCtx.textBaseline = 'middle';
+          molCtx.fillText('SO₄²⁻', p.x, p.y);
+        }
+        molCtx.restore();
+      }
+
+      molAnimationId = requestAnimationFrame(animateMolecularSim);
+    }
+
+    /* =========================================================================
+       11. COMPARISON TEST (QUESTION 2 DEMONSTRATION)
+       ========================================================================= */
+    function runComparisonTest(mode) {
+      if (mode === 'slow') {
+        const liqA = document.getElementById('compareLiquidA');
+        const vortexA = document.getElementById('compareVortexA');
+        vortexA.style.opacity = '1';
+        liqA.style.backgroundColor = '#7e22ce';
+        playSound('stir');
+
+        setTimeout(() => {
+          liqA.style.backgroundColor = '#c084fc';
+        }, 800);
+
+        setTimeout(() => {
+          liqA.style.backgroundColor = 'rgba(240, 249, 255, 0.5)';
+          vortexA.style.opacity = '0';
+          playSound('success');
+        }, 1800);
+
+      } else {
+        const liqB = document.getElementById('compareLiquidB');
+        liqB.className = "w-full h-1/2 bg-gradient-to-t from-purple-950 via-purple-700 to-sky-200/50 relative";
+        playSound('pour');
+
+        setTimeout(() => {
+          // طبقات غير متجانسة بوضوح
+          liqB.style.background = "linear-gradient(to top, #3b0764 40%, #7e22ce 65%, #e0f2fe 100%)";
+        }, 800);
+      }
+    }
+
+    /* =========================================================================
+       12. ASSESSMENT QUIZ & REPORT GENERATION
+       ========================================================================= */
+    function evaluateReportQuiz() {
+      let score = 0;
+      const total = 3;
+
+      // س1: الإجابة الصحيحة (b) - اختفاء اللون البنفسجي
+      const q1Ans = document.querySelector('input[name="q1"]:checked')?.value;
+      const q1Box = document.getElementById('q1Feedback');
+      q1Box.classList.remove('hidden');
+      if (q1Ans === 'b') {
+        score++;
+        q1Box.className = "p-2.5 rounded-lg text-xs font-semibold bg-emerald-950/60 text-emerald-300 border border-emerald-500/40";
+        q1Box.innerHTML = `✓ إجابة صحيحة! الدليل القاطع على حدوث التفاعل هو زوال اللون البنفسجي لمحلول برمنجنات البوتاسيوم واختفاء أيونات MnO₄⁻ لتتحول إلى أيونات Mn²⁺ الشفافة.`;
+      } else {
+        q1Box.className = "p-2.5 rounded-lg text-xs font-semibold bg-rose-950/60 text-rose-300 border border-rose-500/40";
+        q1Box.innerHTML = `✗ إجابة غير دقيقة. الإجابة الصحيحة هي: اختفاء وزوال اللون البنفسجي وتحوله لمحلول شفاف عديم اللون.`;
+      }
+
+      // س2: الإجابة الصحيحة (b) - اختلاط المتفاعلات ورصد نقطة التكافؤ
+      const q2Ans = document.querySelector('input[name="q2"]:checked')?.value;
+      const q2Box = document.getElementById('q2Feedback');
+      q2Box.classList.remove('hidden');
+      if (q2Ans === 'b') {
+        score++;
+        q2Box.className = "p-2.5 rounded-lg text-xs font-semibold bg-emerald-950/60 text-emerald-300 border border-emerald-500/40";
+        q2Box.innerHTML = `✓ إجابة صحيحة وممتازة! الإضافة البطيئة مع التحريك تضمن توزيع الجزيئات ومنع التفاعل الموضعي وتمكن الباحث من تحديد نقطة التكافؤ وزوال اللون بدقة.`;
+      } else {
+        q2Box.className = "p-2.5 rounded-lg text-xs font-semibold bg-rose-950/60 text-rose-300 border border-rose-500/40";
+        q2Box.innerHTML = `✗ إجابة غير دقيقة. الإضافة ببطء مع التحريك تضمن اختلاط وتصادم المتفاعلات بانتظام وتحديد نقطة زوال اللون بدقة دون مادة فائضة.`;
+      }
+
+      // س3: الإجابة الصحيحة (b) - لا يحدث تغير ملحوظ في اللون
+      const q3Ans = document.querySelector('input[name="q3"]:checked')?.value;
+      const q3Box = document.getElementById('q3Feedback');
+      q3Box.classList.remove('hidden');
+      if (q3Ans === 'b') {
+        score++;
+        q3Box.className = "p-2.5 rounded-lg text-xs font-semibold bg-emerald-950/60 text-emerald-300 border border-emerald-500/40";
+        q3Box.innerHTML = `✓ إجابة صحيحة ورائعة! بعد استهلاك كامل أيونات البرمنجنات، لن يطرأ أي تغير لوني، وتتراكم المادة المضافة كمادة فائضة في المحلول.`;
+      } else {
+        q3Box.className = "p-2.5 rounded-lg text-xs font-semibold bg-rose-950/60 text-rose-300 border border-rose-500/40";
+        q3Box.innerHTML = `✗ إجابة غير دقيقة. الاستقصاء يثبت أنه لن يحدث تغير لوني لأن المادة المحددة (البرمنجنات) استُهلكت تماماً.`;
+      }
+
+      const scoreDisplay = document.getElementById('quizScoreDisplay');
+      if (score === total) {
+        playSound('success');
+        scoreDisplay.innerHTML = `<span class="text-emerald-400 font-black">النتيجة: ${score} من ${total} (100% ممتاز جداً! 🎉)</span>`;
+      } else {
+        playSound('chime');
+        scoreDisplay.innerHTML = `<span class="text-amber-300 font-bold">النتيجة: ${score} من ${total}</span>`;
+      }
+    }
+
+    function printLabReport() {
+      window.print();
+    }
+
+    // إشعار عائم
+    function showFloatingNotification(msg) {
+      const div = document.createElement('div');
+      div.className = "fixed bottom-5 right-5 bg-amber-500 text-slate-950 font-black px-4 py-2.5 rounded-2xl shadow-2xl z-50 text-xs border border-amber-300 flex items-center gap-2 animate-bounce";
+      div.innerHTML = `<span>⚠️</span> <span>${msg}</span>`;
+      document.body.appendChild(div);
+      setTimeout(() => {
+        div.remove();
+      }, 3500);
+    }
+
+    /* =========================================================================
+       13. INITIALIZATION ON PAGE LOAD
+       ========================================================================= */
+    window.addEventListener('DOMContentLoaded', () => {
+      setStep(1);
+      updateCylinderVisuals();
+      updateBeakerVisuals();
+      updateBatchTrackerUI();
+      updateFullscreenUI();
+      drawReactionChart();
+    });
+  </script>
+</body>
+</html>
